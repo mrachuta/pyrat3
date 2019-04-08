@@ -1,0 +1,25 @@
+.client-table {
+    font-size: 15px;
+    border: 1px solid #CCCCCC;
+    border-collapse: collapse;
+    border-spacing: 50px 0;
+    width: 100%;
+    text-align: left;
+    display: table;
+}
+
+.client-table th, td {
+  border: 1px solid #CCCCCC;
+}
+
+.green {
+ color: green;
+}
+
+.orange {
+ color: orange;
+}
+
+.red {
+ color: red;
+}
