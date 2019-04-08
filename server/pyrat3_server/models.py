@@ -7,6 +7,8 @@ from time import gmtime, strftime
 # Create your models here.
 class Client(models.Model):
 
+    # change PK to ID due to prevent detection of associated clients
+
     #id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex[:8], editable=False)
     pc_uuid = models.CharField(max_length=36)
     join_datetime = models.DateTimeField(default=timezone.now)

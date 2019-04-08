@@ -31,20 +31,6 @@ from django.http import HttpResponse
 def get_unique_id(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-def register(request):
-    return HttpResponse('Witam w rejestracji')
-
-
-def job(request, pk):
-    return HttpResponse(f'Witaj {pk}')
-
-
-def result(request, pk):
-    if request.method == 'POST':
-        return HttpResponse(f'Witaj {pk}, przesłałeś nasępujące dane {request.body}')
-    else:
-        return HttpResponse('Żadnych danych post')
-
 
 class Index(generic.ListView, generic.edit.FormMixin):
 
