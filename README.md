@@ -1,5 +1,5 @@
 ## Project name
-pyrat3.0 - python remote acess tool - client app and server app.
+pyrat3.0 - python remote acess tool - client app and server app.  
 Previous versions (1.0 and 2.0) are available in other repos.
 
 ## Table of contents
@@ -10,7 +10,7 @@ Previous versions (1.0 and 2.0) are available in other repos.
 * [Thanks](#thanks)
 
 ## General info
-Currently not suitable for testing.
+Currently not suitable for testing.  
 Pre-alpha version.
 
 ## Technologies
