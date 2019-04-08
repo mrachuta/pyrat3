@@ -1,0 +1,9 @@
+.idea/
+*.log
+*.pot
+*.pyc
+server/db.sqlite3
+server/media/
+server/pyrat3/secrets
+server/pyrat3_server/migrations
+client/test.py
