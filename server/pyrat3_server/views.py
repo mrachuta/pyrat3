@@ -34,21 +34,26 @@ def get_unique_id(size=6, chars=string.ascii_uppercase + string.digits):
 
 class Index(generic.ListView, generic.edit.FormMixin):
 
-    model = Client
+    #model = Client
     context_object_name = 'clients'
     template_name = 'pyrat3_server/index.html'
     form_class = ClientSendCommandForm
     initial = {'last_command_id': get_unique_id}
     success_url = 'index'
 
+    def get_queryset(self):
+
+        return Client.objects.all().order_by('-join_datetime')
+
     def post(self, request, *args, **kwargs):
+
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         if form.is_valid():
-            for pc_uuid in form.cleaned_data['pc_uuid']:
+            for client_id in form.cleaned_data['client_id']:
                 print(form.cleaned_data)
-                print(pc_uuid)
-                client = Client.objects.get(pc_uuid=pc_uuid)
+                print(client_id)
+                client = Client.objects.get(client_id=client_id)
                 client.last_command_id = form.cleaned_data['last_command_id']
                 client.last_command = form.cleaned_data['last_command']
                 client.last_command_datetime = datetime.now(tz=pytz.utc)
@@ -62,11 +67,13 @@ class Index(generic.ListView, generic.edit.FormMixin):
 class ClientList(views.APIView):
 
     def get(self, request, format=None):
+
         clients = Client.objects.all()
         serializer = ClientSerializer(clients, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
+
         serializer = ClientSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -78,42 +85,48 @@ class ClientList(views.APIView):
                         setattr(client, key, value)
                 client.save()
                 if changes:
-                    return Response(data={'pc_uuid': client.pc_uuid, 'message': 'Exists, modified'},
+                    return Response(data={'client_id': client.client_id, 'message': 'Exists, modified'},
                                     status=status.HTTP_200_OK)
                 else:
-                    return Response(data={'pc_uuid': client.pc_uuid, 'message': 'Exists, not modified'},
+                    return Response(data={'client_id': client.client_id, 'message': 'Exists, not modified'},
                                     status=status.HTTP_200_OK)
             except ObjectDoesNotExist:
                 serializer.save()
-                return Response(data={'pc_uuid': serializer.data['pc_uuid'], 'message': 'New, added'},
+                return Response(data={'client_id': serializer.data['client_id'], 'message': 'New, added'},
                                 status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ClientDetail(generics.RetrieveUpdateAPIView):
-    lookup_field = 'pc_uuid'
+
+    #lookup_field = 'pc_uuid'
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
 
 class ClientUploadFile(generic.FormView):
+
     template_name = 'pyrat3_server/upload.html'
     form_class = ClientSendFileForm
 
     def post(self, request, *args, **kwargs):
+
         """
         Handle POST requests: instantiate a form instance with the passed
         POST variables and then check if it's valid.
         """
         form = self.get_form()
         if form.is_valid():
-            pc_uuid = self.kwargs['pc_uuid']
+            print(self.kwargs)
+            print(form.cleaned_data)
+            client_id = self.kwargs['pk']
             file = form.cleaned_data['file']
-            fs = FileSystemStorage(location=path.join(settings.MEDIA_ROOT, pc_uuid))
+            fs = FileSystemStorage(location=path.join(settings.MEDIA_ROOT, client_id))
             fs.save(file.name, file)
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
 
     def form_valid(self, form):
+
         return HttpResponse('OK')

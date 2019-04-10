@@ -8,7 +8,7 @@ class ClientSerializer(serializers.ModelSerializer):
 
         model = Client
         fields = (
-            'id',
+            'client_id',
             'pc_uuid',
             'join_datetime',
             'mac',

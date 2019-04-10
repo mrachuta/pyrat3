@@ -16,6 +16,7 @@
     <table class="client-table">
         <tr>
             <th>Pos</th>
+            <th>Client id</th>
             <th>PC UUID</th>
             <th>Join date</th>
             <th>MAC</th>
@@ -36,7 +37,8 @@
         </tr>
         {% for client in clients %}
         <tr>
-            <td>{{ client.id }}</td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ client.client_id }}</td>
             <td>{{ client.pc_uuid }}</td>
             <td>{{ client.join_datetime|date:"Y-m-d H:i:s" }}</td>
             <td>{{ client.mac }}</td>
@@ -70,7 +72,7 @@
                 {% endif %}
             </td>
             {% endwith %}
-            <td><a href="/media/{{ client.pc_uuid }}/">FILES</a></td>
+            <td><a href="/media/{{ client.client_id }}/">FILES</a></td>
         </tr>
         {% endfor %}
     </table>
