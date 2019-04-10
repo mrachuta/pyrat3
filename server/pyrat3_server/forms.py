@@ -4,7 +4,7 @@ from .models import Client
 
 class ClientSendCommandForm(forms.ModelForm):
 
-    pc_uuid = forms.ModelMultipleChoiceField(queryset=Client.objects.all(), to_field_name='pc_uuid')
+    client_id = forms.ModelMultipleChoiceField(queryset=Client.objects.all())
 
     class Meta:
 
@@ -27,7 +27,7 @@ class ClientSendCommandForm(forms.ModelForm):
         }
 
     field_order = [
-        'pc_uuid',
+        'client_id',
         'last_command_id',
         'last_command',
         'last_command_args',

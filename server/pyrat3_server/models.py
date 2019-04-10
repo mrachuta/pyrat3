@@ -9,7 +9,7 @@ class Client(models.Model):
 
     # change PK to ID due to prevent detection of associated clients
 
-    #id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex[:8], editable=False)
+    client_id = models.CharField(primary_key=True, default=uuid.uuid4().hex[:8], editable=False, max_length=8)
     pc_uuid = models.CharField(max_length=36)
     join_datetime = models.DateTimeField(default=timezone.now)
     mac = models.CharField(max_length=12)
@@ -29,7 +29,7 @@ class Client(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return self.pc_uuid
+        return self.client_id
 
 
 
