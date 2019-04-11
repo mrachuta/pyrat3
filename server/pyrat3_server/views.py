@@ -53,6 +53,7 @@ class Index(generic.ListView, generic.edit.FormMixin):
             for client_id in form.cleaned_data['client_id']:
                 print(form.cleaned_data)
                 print(client_id)
+                #client = form.save(commit=False)
                 client = Client.objects.get(client_id=client_id)
                 client.last_command_id = form.cleaned_data['last_command_id']
                 client.last_command = form.cleaned_data['last_command']
