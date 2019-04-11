@@ -1,3 +1,50 @@
+.header-area {
+    height: 140px;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    display: block;
+}
+
+label {
+    display: block;
+}
+
+.form-area {
+    height: 200px;
+    width: 100%;
+}
+
+.form-area-last-command-id-field {
+    display: none;
+}
+
+.form-area-client-id-field {
+    height: 200px;
+    width: 520px;
+}
+
+#id_client_id,
+#id_last_command_args {
+    height: 150px;
+    width: 500px;
+}
+
+.form-area-last-command-field {
+    height: 200px;
+    width: 300px;
+}
+
+.form-area-client-id-field,
+.form-area-last-command-field,
+.form-area-last-command-args-field {
+    float: left;
+}
+
+.send-command {
+    display: block;
+}
+
 .client-table {
     font-size: 15px;
     border: 1px solid #CCCCCC;

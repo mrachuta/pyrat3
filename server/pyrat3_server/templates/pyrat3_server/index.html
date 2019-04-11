@@ -5,14 +5,57 @@
     {% load user_tags %}
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title></title>
+    <title>pyrat3 :: home</title>
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"
+            integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+            crossorigin="anonymous">
+    </script>
 </head>
 <body>
-    <form method="POST" >
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">GO!</button>
-    </form>
+    <div id="header_area" class="header-area">
+        <pre>
+
+
+ ______   __  __     ______     ______     ______
+/\  == \ /\ \_\ \   /\  == \   /\  __ \   /\__  _\
+\ \  _-/ \ \____ \  \ \  __<   \ \  __ \  \/_/\ \/
+ \ \_\    \/\_____\  \ \_\ \_\  \ \_\ \_\    \ \_\
+  \/_/     \/_____/   \/_/ /_/   \/_/\/_/     \/_/
+
+
+        </pre>
+    </div>
+
+        <form method="POST" >
+            <div id="form_area" class="form-area">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {{ form.source.errors }}
+                {{ form.source }}
+                <div id="form_area_last_command_id_field" class="form-area-last-command-id-field">
+                    {{ form.last_command_id.label_tag }}
+                    {{ form.last_command_id.errors }}
+                    {{ form.last_command_id }}
+                </div>
+                <div id="form_area_client_id_field" class="form-area-client-id-field">
+                    {{ form.client_id.label_tag }}
+                    {{ form.client_id.errors }}
+                    {{ form.client_id }}
+                </div>
+                <div id="form_area_last_command_field" class="form-area-last-command-field">
+                    {{ form.last_command.label_tag }}
+                    {{ form.last_command.errors }}
+                    {{ form.last_command }}
+                </div>
+                <div id="form_area_last_command_args_field" class="form-area-last-command-args-field">
+                    {{ form.last_command_args.label_tag }}
+                    {{ form.last_command_args.errors }}
+                    {{ form.last_command_args }}
+                </div>
+            </div>
+            <button class="send-command" type="submit">GO!</button>
+        </form>
+
     <table class="client-table">
         <tr>
             <th>Pos</th>
