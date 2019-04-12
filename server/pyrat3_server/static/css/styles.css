@@ -11,7 +11,7 @@ label {
 }
 
 .form-area {
-    height: 200px;
+    height: 400px;
     width: 100%;
 }
 
@@ -39,6 +39,36 @@ label {
 .form-area-last-command-field,
 .form-area-last-command-args-field {
     float: left;
+}
+
+.arg-field {
+    margin-top: 15px;
+    margin-right: 15px;
+    width: auto;
+    height: 40px;
+    float: left;
+}
+
+.arg-field textarea {
+    resize: horizontal;
+    width: 200px;
+    min-width: 200px;
+    height: 15px;
+}
+
+.form-area-last-command-args-field {
+    display: none;
+    height: 200px;
+    width: 800px;
+}
+
+.form-area-last-command-args-field-test {
+    display: block;
+    height: 200px;
+    width: 800px;
+}
+
+.form-area-last-command-args-field-empty {
 }
 
 .send-command {

