@@ -16,7 +16,13 @@
                 var command = $(this).val();
                 $("div.form-area-last-command-args-field-empty").hide();
                 $("div.form-area-last-command-args-field").hide();
+                $("div.form-area-last-command-args-field > .arg-field textarea, select").each(function() {
+                    $(this).removeAttr('required');
+                });
                 $("#form_area_" + command + "_args_field").show();
+                $("#form_area_" + command + "_args_field > .arg-field textarea, select").each(function() {
+                    $(this).attr('required', 'required');
+                });
             });
         });
     </script>
@@ -35,7 +41,7 @@
 
         </pre>
     </div>
-        <form method="POST" id="command_form">
+        <form id="command_form">
             <div id="form_area" class="form-area">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
@@ -64,56 +70,56 @@
                     <label>Popup args:</label>
                     <div class="arg-field">
                         <label for="title">Title: </label>
-                        <textarea name="title" required id="title"></textarea>
+                        <textarea name="title"  id="title"></textarea>
                     </div>
                     <div class="arg-field">
                         <label for="text">Text: </label>
-                        <textarea name="text" required id="text"></textarea>
+                        <textarea name="text"  id="text"></textarea>
                     </div>
                 </div>
                 <div id="form_area_run_command_args_field" class="form-area-last-command-args-field">
                     <label>Run command args:</label>
                     <div class="arg-field">
                         <label for="terminal">Terminal:</label>
-                         <select name = "terminal" required id="terminal">
+                         <select name = "terminal"  id="terminal">
                             <option value = "True" selected>True</option>
                             <option value = "False">False</option>
                          </select>
                     </div>
                     <div class="arg-field">
                         <label for="arg0">Arg0:</label>
-                        <textarea name="arg0" required id="arg0"></textarea>
+                        <textarea name="arg0"  id="arg0"></textarea>
                     </div>
                     <div class="arg-field">
                         <label for="arg1">Arg1:</label>
-                        <textarea name="arg1" required id="arg1"></textarea>
+                        <textarea name="arg1"  id="arg1"></textarea>
                     </div>
                     <div class="arg-field">
                         <label for="arg2">Arg2:</label>
-                        <textarea name="arg2" required id="arg2"></textarea>
+                        <textarea name="arg2"  id="arg2"></textarea>
                     </div>
                     <div class="arg-field">
                         <label for="arg3">Arg3:</label>
-                        <textarea name="arg3" required id="arg3"></textarea>
+                        <textarea name="arg3"  id="arg3"></textarea>
                     </div>
                     <div class="arg-field">
                         <label for="arg4">Arg4:</label>
-                        <textarea name="arg4" required id="arg4"></textarea>
+                        <textarea name="arg4"  id="arg4"></textarea>
                     </div>
                 </div>
                 <div id="form_area_file_download_args_field" class="form-area-last-command-args-field">
                     <label>Download file args</label>
                     <div class="arg-field">
                         <label for="url">URL:</label>
-                        <textarea name="url" required id="url"></textarea>
+                        <textarea name="url"  id="url"></textarea>
                     </div>
                     <div class="arg-field">
                         <label for="d_path">Save path on remote PC:</label>
-                        <textarea name="d_path" required id="d_path"></textarea>
+                        <textarea name="d_path"  id="d_path"></textarea>
                     </div>
                     <div class="arg-field">
                         <label for="arg0">Execute:</label>
-                         <select name = "execute" required id="execute">
+                         <select name = "execute"  id="execute">
                             <option value = "True" selected>True</option>
                             <option value = "False">False</option>
                          </select>
@@ -127,10 +133,10 @@
                     <label>Upload file args</label>
                     <div class="arg-field">
                         <label for="file_path">Save path on remote PC:</label>
-                        <textarea name="file_path" required id="file_path"></textarea>
+                        <textarea name="file_path"  id="file_path"></textarea>
                     </div>
                 </div>
-                <div id="form_area_last_command_args_field" class="form-area-last-command-args-field-test">
+                <div id="form_area_last_command_args_field" class="form-area-last-command-args-field">
                     {{ form.last_command_args.label_tag }}
                     {{ form.last_command_args.errors }}
                     {{ form.last_command_args }}
@@ -139,95 +145,67 @@
             <button class="send-command" type="submit">GO!</button>
         </form>
         <script>
-            $(document).ready(function() {
-                console.log('sraka');
-                $('.send-command').click(function() {
-                    // e.preventDefault();
-                    console.log('sraka2');
+                $(document).ready(function() {
+                    console.log('sraka');
+                    $('#command_form').on("submit", function(e) {
+                        e.preventDefault();
+                        console.log('sraka2');
 
-                    var args_dict = {};
-                    var selected_command = $('#form_area_last_command_field input:checked').attr('value');
-                    alert(selected_command);
+                        var args_dict = {};
+                        var selected_command = $('#form_area_last_command_field input:checked').attr('value');
+                        alert(selected_command);
 
-                    $('#form_area_' + selected_command + '_args_field input').each(function () {
-                        args_dict[this.id] = this.value;
-                    });
-                    $('#form_area_' + selected_command + '_args_field textarea').each(function () {
-                        args_dict[this.id] = this.value;
-                    });
-                    $('#form_area_' + selected_command + '_args_field select').each(function () {
-                        args_dict[this.id] = this.value;
-                    });
-                    // console.log(arg_dict);
-                    args_json = JSON.stringify(args_dict);
-                    console.log(args_json);
+                        $('#form_area_' + selected_command + '_args_field input').each(function () {
+                            args_dict[this.id] = this.value;
+                        });
+                        $('#form_area_' + selected_command + '_args_field textarea').each(function () {
+                            args_dict[this.id] = this.value;
+                        });
+                        $('#form_area_' + selected_command + '_args_field select').each(function () {
+                            args_dict[this.id] = this.value;
+                        });
+                        //console.log(arg_dict);
+                        args_json = JSON.stringify(args_dict);
+                        console.log(args_json);
 
-                    $('#id_last_command_args').val(args_json);
+                        $('#id_last_command_args').val(args_json);
+
+                        // exclude divs and inputs
+                        var datastring = $('#command_form :not(.arg-field textarea, .arg-field select)').serialize();
+                        console.log(datastring);
+
+                        $.ajax({
+                            url: 'index',
+                            type: 'POST',
+                            data: datastring,
+                        })
+                        .done(function() {
+                            $('#ajax_status').empty();
+                            $('#ajax_status').append('Żądanie AJAX z komendą ' + $('#id_last_command_0').val() + ' zostało wysłane poprawnie');
+                        })
+                        .fail(function(res) {
+                            $('#ajax_status').empty();
+                            $('#ajax_status').append('Coś poszło nie tak');
+                        });
+                    });
                 });
+            </script>
+    <div class="ajax-status" id="ajax_status">
+        Brak informacji o statusie żądania AJAX.
+    </div>
+    <div id="fresh_client_table">
+        <script>
+            // Import a table with users from another file
+            $('document').ready(function(){
+                setInterval(function(){
+                    $.ajax({
+                        url: 'client_table #client_table',
+                    }).done(function(data) {
+                        $('#fresh_client_table').html(data);
+                    });
+                }, 10000);
             });
         </script>
-    <table class="client-table">
-        <tr>
-            <th>Pos</th>
-            <th>Client id</th>
-            <th>PC UUID</th>
-            <th>Join date</th>
-            <th>MAC</th>
-            <th>OS</th>
-            <th>Name</th>
-            <th>Ext IP</th>
-            <th>Int IP</th>
-            <th>Country</th>
-            <th>Last command ID</th>
-            <!-- <th>Last command date/time</th> -->
-            <th>Last command</th>
-            <th>Last command args</th>
-            <th>Last command result</th>
-            <!-- <th>Last command result date/time</th> -->
-            <th>Ping</th>
-            <th>Status</th>
-            <th>Files</th>
-        </tr>
-        {% for client in clients %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ client.client_id }}</td>
-            <td>{{ client.pc_uuid }}</td>
-            <td>{{ client.join_datetime|date:"Y-m-d H:i:s" }}</td>
-            <td>{{ client.mac }}</td>
-            <td>{{ client.os }}</td>
-            <td>{{ client.name }}</td>
-            <td>{{ client.ext_ip }}</td>
-            <td>{{ client.int_ip }}</td>
-            <td>{{ client.country }}</td>
-            <td>{{ client.last_command_id }} ({{ client.last_command_datetime|date:"Y-m-d H:i:s" }})</td>
-            <td>{{ client.last_command }}</td>
-            <td>{{ client.last_command_args }}</td>
-            <td>{{ client.last_command_result|linebreaks }}</td>
-            <!-- <td>{{ client.last_command_result_datetime }}</td> -->
-            {% with client.last_activity_datetime|timediff as ping %}
-            <td>
-                {% if ping < 16 %}
-                <span class="green">{{ ping }}</span>
-                {% elif ping < 100 %}
-                <span class="orange">{{ ping }}</span>
-                {% else %}
-                <span class="red">Offline</span>
-                {% endif %}
-            </td>
-            <td>
-                {% if client.last_command_id in client.last_command_result and ping < 16  %}
-                IDDLE
-                {% elif ping > 100 %}
-                ------
-                {% else %}
-                WORKING
-                {% endif %}
-            </td>
-            {% endwith %}
-            <td><a href="/media/{{ client.client_id }}/">FILES</a></td>
-        </tr>
-        {% endfor %}
-    </table>
+    </div>
 </body>
 </html>

@@ -101,6 +101,7 @@ class Client:
     def register_at_db(self):
 
         get_status = requests.post(HOME_HOST, json=self.user_data)
+        print(get_status.json())
         status_message = get_status.json()['message']
         self.client_id = get_status.json()['client_id']
         self.home_host = f'{HOME_HOST}{self.client_id}/'
@@ -251,7 +252,8 @@ def main():
                 )
                 client.register_at_db()
                 break
-            except Exception: #as e:
+            except Exception as e:
+                print(e)
                 try_count -= 1
                 if not try_count:
                     subprocess.Popen(["python", script_path])

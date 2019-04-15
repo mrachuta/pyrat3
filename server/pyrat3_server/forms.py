@@ -4,8 +4,6 @@ from .models import Client
 
 class ClientSendCommandForm(forms.ModelForm):
 
-
-
     client_id = forms.MultipleChoiceField(
         choices=[
             (
@@ -20,6 +18,7 @@ class ClientSendCommandForm(forms.ModelForm):
         ], label='Select client(s):',
     )
 
+    # UWAGA NIE ODSWIEZA SIE LISTA
     # Otherwise, can be used ModelsMultipleChoiceField with queryset and override __init__ method in model (with
     # required=False parameter for unrequired params)
 
