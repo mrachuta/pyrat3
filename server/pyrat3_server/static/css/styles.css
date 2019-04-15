@@ -11,7 +11,7 @@ label {
 }
 
 .form-area {
-    height: 400px;
+    height: 200px;
     width: 100%;
 }
 
@@ -59,13 +59,13 @@ label {
 .form-area-last-command-args-field {
     display: none;
     height: 200px;
-    width: 800px;
+    width: 700px;
 }
 
 .form-area-last-command-args-field-test {
-    display: block;
-    height: 200px;
-    width: 800px;
+    display: none;
+    /* height: 200px;
+    width: 700px; */
 }
 
 .form-area-last-command-args-field-empty {
@@ -73,6 +73,14 @@ label {
 
 .send-command {
     display: block;
+}
+
+.ajax-status {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: block;
+    height: 40px;
+    width: 100%;
 }
 
 .client-table {
