@@ -22,6 +22,8 @@ import uuid
 from datetime import datetime
 import pytz
 
+from django.http import JsonResponse
+
 from ast import literal_eval
 
 # Create your views here.
@@ -37,7 +39,7 @@ class Index(generic.edit.FormView):
     template_name = 'pyrat3_server/index.html'
     form_class = ClientSendCommandForm
     initial = {'last_command_id': get_unique_id}
-    success_url = 'index'
+    #success_url = 'index'
 
     def post(self, request, *args, **kwargs):
 
@@ -60,6 +62,14 @@ class Index(generic.edit.FormView):
         else:
             #print(form.cleaned_data)
             return self.form_invalid(form)
+
+    def form_valid(self, form):
+        """If the form is valid, redirect to the supplied URL."""
+        return JsonResponse({'form_valid': True}, status=200)
+
+    def form_invalid(self, form):
+        """If the form is invalid, render the invalid form."""
+        return JsonResponse({'form_valid': False}, status=400)
 
 
 class ClientTable(generic.ListView):

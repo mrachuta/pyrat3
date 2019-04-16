@@ -4,23 +4,16 @@ from .models import Client
 
 class ClientSendCommandForm(forms.ModelForm):
 
-    client_id = forms.MultipleChoiceField(
-        choices=[
-            (
-                client_id,
-                f'{pc_uuid} ({ext_ip}/{int_ip})'
-            ) for client_id, pc_uuid, ext_ip, int_ip in Client.objects.all().values_list(
-                'client_id',
-                'pc_uuid',
-                'ext_ip',
-                'int_ip'
-            )
-        ], label='Select client(s):',
-    )
+    class CustomModelMultipleChoiceField(forms.ModelMultipleChoiceField):
 
-    # UWAGA NIE ODSWIEZA SIE LISTA
-    # Otherwise, can be used ModelsMultipleChoiceField with queryset and override __init__ method in model (with
-    # required=False parameter for unrequired params)
+        def label_from_instance(self, obj):
+            return '{} ({}/{})'.format(obj.pc_uuid, obj.ext_ip, obj.int_ip)
+
+    client_id = CustomModelMultipleChoiceField(
+        queryset=Client.objects.all(),
+        to_field_name='client_id',
+        label='Select client(s):',
+    )
 
     class Meta:
 

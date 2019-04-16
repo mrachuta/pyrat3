@@ -1,5 +1,5 @@
 .header-area {
-    height: 140px;
+    height: 100px;
     width: 100%;
     text-align: center;
     vertical-align: middle;
@@ -11,7 +11,7 @@ label {
 }
 
 .form-area {
-    height: 200px;
+    height: 180px;
     width: 100%;
 }
 
@@ -20,7 +20,7 @@ label {
 }
 
 .form-area-client-id-field {
-    height: 200px;
+    height: 180px;
     width: 520px;
 }
 
@@ -31,7 +31,7 @@ label {
 }
 
 .form-area-last-command-field {
-    height: 200px;
+    height: 180px;
     width: 300px;
 }
 
@@ -51,14 +51,14 @@ label {
 
 .arg-field textarea {
     resize: horizontal;
-    width: 200px;
+    width: 180px;
     min-width: 200px;
     height: 15px;
 }
 
 .form-area-last-command-args-field {
     display: none;
-    height: 200px;
+    height: 180px;
     width: 700px;
 }
 
@@ -94,17 +94,17 @@ label {
 }
 
 .client-table th, td {
-  border: 1px solid #CCCCCC;
+    border: 1px solid #CCCCCC;
 }
 
 .green {
- color: green;
+    color: green;
 }
 
 .orange {
- color: orange;
+    color: orange;
 }
 
 .red {
- color: red;
+    color: red;
 }
