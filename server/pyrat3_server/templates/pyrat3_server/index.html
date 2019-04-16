@@ -30,14 +30,11 @@
 <body>
     <div id="header_area" class="header-area">
         <pre>
-
-
  ______   __  __     ______     ______     ______
 /\  == \ /\ \_\ \   /\  == \   /\  __ \   /\__  _\
 \ \  _-/ \ \____ \  \ \  __<   \ \  __ \  \/_/\ \/
  \ \_\    \/\_____\  \ \_\ \_\  \ \_\ \_\    \ \_\
   \/_/     \/_____/   \/_/ /_/   \/_/\/_/     \/_/
-
 
         </pre>
     </div>
@@ -78,34 +75,51 @@
                     </div>
                 </div>
                 <div id="form_area_run_command_args_field" class="form-area-last-command-args-field">
-                    <label>Run command args:</label>
+                    <label>
+                        Run command args:
+                        <a href="#" id="add_input">+</a>
+                        <a href="#" id="remove_input">-</a>
+                    </label>
                     <div class="arg-field">
                         <label for="terminal">Terminal:</label>
-                         <select name = "terminal"  id="terminal">
+                         <select name = "terminal" id="terminal">
                             <option value = "True" selected>True</option>
                             <option value = "False">False</option>
                          </select>
                     </div>
                     <div class="arg-field">
                         <label for="arg0">Arg0:</label>
-                        <textarea name="arg0"  id="arg0"></textarea>
+                        <textarea name="arg0" id="arg0"></textarea>
                     </div>
-                    <div class="arg-field">
-                        <label for="arg1">Arg1:</label>
-                        <textarea name="arg1"  id="arg1"></textarea>
-                    </div>
-                    <div class="arg-field">
-                        <label for="arg2">Arg2:</label>
-                        <textarea name="arg2"  id="arg2"></textarea>
-                    </div>
-                    <div class="arg-field">
-                        <label for="arg3">Arg3:</label>
-                        <textarea name="arg3"  id="arg3"></textarea>
-                    </div>
-                    <div class="arg-field">
-                        <label for="arg4">Arg4:</label>
-                        <textarea name="arg4"  id="arg4"></textarea>
-                    </div>
+                    <script>
+                        var max_fields = 8;
+                        var min_fields = 2;
+                        var ct = 1;
+                        var wrapper = $('#form_area_run_command_args_field');
+
+                        $(wrapper).on('click', '#add_input', function(e) {
+                            e.preventDefault();
+                            var total_fields = $('#form_area_run_command_args_field > div').length
+                            if(total_fields <= max_fields){
+                                // Additional div must be added, for removing button function
+                                $(wrapper).append(`<div class="arg-field"><label for="arg${ct}">Arg${ct}:</label>\
+                                <textarea name="arg${ct}" id="arg${ct}" required="required"></textarea></div>`);
+                                ct++;
+                            } else {
+                            alert('Max fields');
+                            }
+                        });
+                        $(wrapper).on('click', '#remove_input', function(e) {
+                            e.preventDefault();
+                            var total_fields = $('#form_area_run_command_args_field > div').length
+                            if(total_fields > min_fields){
+                                $(wrapper).children().last().remove();
+                                ct--;
+                            } else {
+                            alert('Min fields');
+                            }
+                        });
+                    </script>
                 </div>
                 <div id="form_area_file_download_args_field" class="form-area-last-command-args-field">
                     <label>Download file args</label>
@@ -146,14 +160,14 @@
         </form>
         <script>
                 $(document).ready(function() {
-                    console.log('sraka');
+                    console.log('TEST1');
                     $('#command_form').on("submit", function(e) {
                         e.preventDefault();
-                        console.log('sraka2');
+                        console.log('TEST2');
 
                         var args_dict = {};
                         var selected_command = $('#form_area_last_command_field input:checked').attr('value');
-                        alert(selected_command);
+                        console.log(selected_command);
 
                         $('#form_area_' + selected_command + '_args_field input').each(function () {
                             args_dict[this.id] = this.value;
@@ -179,13 +193,27 @@
                             type: 'POST',
                             data: datastring,
                         })
-                        .done(function() {
+                        .done(function(response) {
+                            console.log(response);
                             $('#ajax_status').empty();
-                            $('#ajax_status').append('Żądanie AJAX z komendą ' + $('#id_last_command_0').val() + ' zostało wysłane poprawnie');
+                            if (response.form_valid) {
+                                $('#ajax_status').append('AJAX request with command '
+                                + selected_command + ' was successfully processed');
+                            } else {
+                                $('#ajax_status').append('Server was not returned confirmation about processing command '
+                                + selected_command + '. Try again.');
+                            }
                         })
-                        .fail(function(res) {
-                            $('#ajax_status').empty();
-                            $('#ajax_status').append('Coś poszło nie tak');
+                        .fail(function(response) {
+                            console.log(response);
+                            if (!response.form_valid) {
+                                $('#ajax_status').append('AJAX request with command '
+                                + selected_command +
+                                ' was not successfully processed. Form validation failed.');
+                            } else {
+                                $('#ajax_status').append('Server was unable to process AJAX request with command '
+                                + selected_command + '. Unknown error');
+                            }
                         });
                     });
                 });
