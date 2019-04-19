@@ -21,34 +21,34 @@ class ClientSendCommandForm(forms.ModelForm):
             ('popup', 'Show popup'),
             ('run_command', 'Run command'),
             ('file_download', 'Download file on remote host'),
-            ('screenshoot', 'Make screenshoot'),
+            ('screenshot', 'Make screenshot'),
             ('file_upload', 'Upload file from remote host'),
         )
 
         model = Client
 
         fields = [
-            'last_command_id',
-            'last_command',
-            'last_command_args'
+            'command_id',
+            'command',
+            'command_args'
         ]
 
         labels = {
-            'last_command_id': 'Command ID',
-            'last_command': 'Command to execute',
-            'last_command_args': 'Command arguments'
+            'command_id': 'Command ID',
+            'command': 'Command to execute',
+            'command_args': 'Command arguments'
         }
 
         widgets = {
-            'last_command_id': forms.TextInput(attrs={'readonly': 'readonly'}),
-            'last_command': forms.RadioSelect(choices=commands),
+            'command_id': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'command': forms.RadioSelect(choices=commands),
         }
 
     field_order = [
-        'last_command_id',
+        'command_id',
         'client_id',
-        'last_command',
-        'last_command_args',
+        'command',
+        'command_args',
     ]
     '''
     def __init__(self, *args, **kwargs):

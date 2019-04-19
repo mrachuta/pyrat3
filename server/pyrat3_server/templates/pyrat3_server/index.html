@@ -14,13 +14,13 @@
         $(document).ready(function(){
             $('input[type="radio"]').click(function(){
                 var command = $(this).val();
-                $("div.form-area-last-command-args-field-empty").hide();
-                $("div.form-area-last-command-args-field").hide();
-                $("div.form-area-last-command-args-field > .arg-field textarea, select").each(function() {
+                $("div.form-area-initial-args-box").hide();
+                $("div.form-area-command-args-box").hide();
+                $("div.form-area-command-args-box > .form-area-arg-field textarea, select").each(function() {
                     $(this).removeAttr('required');
                 });
-                $("#form_area_" + command + "_args_field").show();
-                $("#form_area_" + command + "_args_field > .arg-field textarea, select").each(function() {
+                $("#form_area_" + command + "_args_box").show();
+                $("#form_area_" + command + "_args_box > .form-area-arg-field textarea, select").each(function() {
                     $(this).attr('required', 'required');
                 });
             });
@@ -35,205 +35,235 @@
 \ \  _-/ \ \____ \  \ \  __<   \ \  __ \  \/_/\ \/
  \ \_\    \/\_____\  \ \_\ \_\  \ \_\ \_\    \ \_\
   \/_/     \/_____/   \/_/ /_/   \/_/\/_/     \/_/
-
         </pre>
     </div>
+    <div id="form_area" class="form-area">
         <form id="command_form">
-            <div id="form_area" class="form-area">
-                {% csrf_token %}
-                {{ form.non_field_errors }}
-                {{ form.source.errors }}
-                {{ form.source }}
-                <div id="form_area_last_command_id_field" class="form-area-last-command-id-field">
-                    {{ form.last_command_id.label_tag }}
-                    {{ form.last_command_id.errors }}
-                    {{ form.last_command_id }}
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {{ form.source.errors }}
+            {{ form.source }}
+            <div id="form_area_command_id_box" class="form-area-command-id-box">
+                {{ form.command_id.label_tag }}
+                {{ form.command_id.errors }}
+                {{ form.command_id }}
+            </div>
+            <div id="form_area_client_id_box" class="form-area-client-id-box">
+                {{ form.client_id.label_tag }}
+                {{ form.client_id.errors }}
+                {{ form.client_id }}
+            </div>
+            <div id="form_area_command_box" class="form-area-command-box">
+                {{ form.command.label_tag }}
+                {{ form.command.errors }}
+                {{ form.command }}
+            </div>
+            <div id="form_area_initial_args_box" class="form-area-initial-args-box">
+                <label>Command args:</label>
+                <p>Please select radio button with type of command to see required arguments</p>
+            </div>
+            <div id="form_area_popup_args_box" class="form-area-command-args-box">
+                <label>Popup args:</label>
+                <div class="form-area-arg-field">
+                    <label for="title">Title: </label>
+                    <textarea name="title" id="title"></textarea>
                 </div>
-                <div id="form_area_client_id_field" class="form-area-client-id-field">
-                    {{ form.client_id.label_tag }}
-                    {{ form.client_id.errors }}
-                    {{ form.client_id }}
-                </div>
-                <div id="form_area_last_command_field" class="form-area-last-command-field">
-                    {{ form.last_command.label_tag }}
-                    {{ form.last_command.errors }}
-                    {{ form.last_command }}
-                </div>
-                <div id="form_area_last_command_args_field_empty" class="form-area-last-command-args-field-empty">
-                    <label>Command args:</label>
-                    <p>Please select radio button with type of command to see required arguments</p>
-                </div>
-                <div id="form_area_popup_args_field" class="form-area-last-command-args-field">
-                    <label>Popup args:</label>
-                    <div class="arg-field">
-                        <label for="title">Title: </label>
-                        <textarea name="title"  id="title"></textarea>
-                    </div>
-                    <div class="arg-field">
-                        <label for="text">Text: </label>
-                        <textarea name="text"  id="text"></textarea>
-                    </div>
-                </div>
-                <div id="form_area_run_command_args_field" class="form-area-last-command-args-field">
-                    <label>
-                        Run command args:
-                        <a href="#" id="add_input">+</a>
-                        <a href="#" id="remove_input">-</a>
-                    </label>
-                    <div class="arg-field">
-                        <label for="terminal">Terminal:</label>
-                         <select name = "terminal" id="terminal">
-                            <option value = "True" selected>True</option>
-                            <option value = "False">False</option>
-                         </select>
-                    </div>
-                    <div class="arg-field">
-                        <label for="arg0">Arg0:</label>
-                        <textarea name="arg0" id="arg0"></textarea>
-                    </div>
-                    <script>
-                        var max_fields = 8;
-                        var min_fields = 2;
-                        var ct = 1;
-                        var wrapper = $('#form_area_run_command_args_field');
-
-                        $(wrapper).on('click', '#add_input', function(e) {
-                            e.preventDefault();
-                            var total_fields = $('#form_area_run_command_args_field > div').length
-                            if(total_fields <= max_fields){
-                                // Additional div must be added, for removing button function
-                                $(wrapper).append(`<div class="arg-field"><label for="arg${ct}">Arg${ct}:</label>\
-                                <textarea name="arg${ct}" id="arg${ct}" required="required"></textarea></div>`);
-                                ct++;
-                            } else {
-                            alert('Max fields');
-                            }
-                        });
-                        $(wrapper).on('click', '#remove_input', function(e) {
-                            e.preventDefault();
-                            var total_fields = $('#form_area_run_command_args_field > div').length
-                            if(total_fields > min_fields){
-                                $(wrapper).children().last().remove();
-                                ct--;
-                            } else {
-                            alert('Min fields');
-                            }
-                        });
-                    </script>
-                </div>
-                <div id="form_area_file_download_args_field" class="form-area-last-command-args-field">
-                    <label>Download file args</label>
-                    <div class="arg-field">
-                        <label for="url">URL:</label>
-                        <textarea name="url"  id="url"></textarea>
-                    </div>
-                    <div class="arg-field">
-                        <label for="d_path">Save path on remote PC:</label>
-                        <textarea name="d_path"  id="d_path"></textarea>
-                    </div>
-                    <div class="arg-field">
-                        <label for="arg0">Execute:</label>
-                         <select name = "execute"  id="execute">
-                            <option value = "True" selected>True</option>
-                            <option value = "False">False</option>
-                         </select>
-                    </div>
-                </div>
-                <div id="form_area_screenshoot_args_field" class="form-area-last-command-args-field">
-                    <label>Screenshoot args:</label>
-                    <p>Screenshoot command has no args</p>
-                </div>
-                <div id="form_area_file_upload_args_field" class="form-area-last-command-args-field">
-                    <label>Upload file args</label>
-                    <div class="arg-field">
-                        <label for="file_path">Save path on remote PC:</label>
-                        <textarea name="file_path"  id="file_path"></textarea>
-                    </div>
-                </div>
-                <div id="form_area_last_command_args_field" class="form-area-last-command-args-field">
-                    {{ form.last_command_args.label_tag }}
-                    {{ form.last_command_args.errors }}
-                    {{ form.last_command_args }}
+                <div class="form-area-arg-field">
+                    <label for="text">Text: </label>
+                    <textarea name="text" id="text"></textarea>
                 </div>
             </div>
-            <button class="send-command" type="submit">GO!</button>
-        </form>
-        <script>
-                $(document).ready(function() {
-                    console.log('TEST1');
-                    $('#command_form').on("submit", function(e) {
+            <div id="form_area_run_command_args_box" class="form-area-command-args-box">
+                <label>
+                    Run command args:
+                    <a href="#" id="add_input">+</a>
+                    <a href="#" id="remove_input">-</a>
+                </label>
+                <div class="form-area-arg-field">
+                    <label for="terminal">Terminal:</label>
+                     <select name = "terminal" id="terminal">
+                        <option value = "True" selected>True</option>
+                        <option value = "False">False</option>
+                     </select>
+                </div>
+                <div class="form-area-arg-field">
+                    <label for="arg0">Arg0:</label>
+                    <textarea name="arg0" id="arg0"></textarea>
+                </div>
+                <script>
+                    var max_fields = 8;
+                    var min_fields = 2;
+                    var ct = 1;
+                    var wrapper = $('#form_area_run_command_args_box');
+
+                    $(wrapper).on('click', '#add_input', function(e) {
                         e.preventDefault();
-                        console.log('TEST2');
+                        var total_fields = $('#form_area_run_command_args_box > div').length
+                        if(total_fields <= max_fields){
+                            // Additional div must be added, for removing button function
+                            $(wrapper).append(`<div class="form-area-arg-field"><label for="arg${ct}">Arg${ct}:</label>\
+                            <textarea name="arg${ct}" id="arg${ct}" required="required"></textarea></div>`);
+                            ct++;
+                        } else {
+                        alert('Maximum field count was reached');
+                        }
+                    });
+                    $(wrapper).on('click', '#remove_input', function(e) {
+                        e.preventDefault();
+                        var total_fields = $('#form_area_run_command_args_box > div').length
+                        if(total_fields > min_fields){
+                            $(wrapper).children().last().remove();
+                            ct--;
+                        } else {
+                        alert('Minimum field count was reached');
+                        }
+                    });
+                </script>
+            </div>
+            <div id="form_area_file_download_args_box" class="form-area-command-args-box">
+                <label>Download file args</label>
+                <div class="form-area-arg-field">
+                    <label for="url">URL:</label>
+                    <textarea name="url"  id="url"></textarea>
+                </div>
+                <div class="form-area-arg-field">
+                    <label for="d_path">Save path on remote PC:</label>
+                    <textarea name="d_path"  id="d_path"></textarea>
+                </div>
+                <div class="form-area-arg-field">
+                    <label for="arg0">Execute:</label>
+                     <select name = "execute"  id="execute">
+                        <option value = "True" selected>True</option>
+                        <option value = "False">False</option>
+                     </select>
+                </div>
+            </div>
+            <div id="form_area_screenshot_args_box" class="form-area-command-args-box">
+                <label>Screenshot args:</label>
+                <p>Screenshot command has no args</p>
+            </div>
+            <div id="form_area_file_upload_args_box" class="form-area-command-args-box">
+                <label>Upload file args</label>
+                <div class="form-area-arg-field">
+                    <label for="file_path">Save path on remote PC:</label>
+                    <textarea name="file_path"  id="file_path"></textarea>
+                </div>
+            </div>
+            <div id="form_area_command_args_box" class="form-area-command-args-box">
+                {{ form.command_args.label_tag }}
+                {{ form.command_args.errors }}
+                {{ form.command_args }}
+            </div>
+            <button id="form_area_send_command" class="form-area-send-command" type="submit">GO!</button>
+        </form>
+    </div>
+    <script>
+            $(document).ready(function() {
+                $('#command_form').on('submit', function(e) {
+                    e.preventDefault();
 
-                        var args_dict = {};
-                        var selected_command = $('#form_area_last_command_field input:checked').attr('value');
-                        console.log(selected_command);
+                    var args_dict = {};
+                    var selected_command = $('#form_area_command_box input:checked').attr('value');
+                    var command_id = $('#id_command_id').val();
+                    console.log(selected_command);
 
-                        $('#form_area_' + selected_command + '_args_field input').each(function () {
-                            args_dict[this.id] = this.value;
-                        });
-                        $('#form_area_' + selected_command + '_args_field textarea').each(function () {
-                            args_dict[this.id] = this.value;
-                        });
-                        $('#form_area_' + selected_command + '_args_field select').each(function () {
-                            args_dict[this.id] = this.value;
-                        });
-                        //console.log(arg_dict);
-                        args_json = JSON.stringify(args_dict);
-                        console.log(args_json);
+                    $(`#form_area_${selected_command}_args_box input`).each(function () {
+                        args_dict[this.id] = this.value;
+                    });
+                    $(`#form_area_${selected_command}_args_box textarea`).each(function () {
+                        args_dict[this.id] = this.value;
+                    });
+                    $(`#form_area_${selected_command}_args_box select`).each(function () {
+                        args_dict[this.id] = this.value;
+                    });
 
-                        $('#id_last_command_args').val(args_json);
+                    args_str = JSON.stringify(args_dict);
+                    console.log(args_str);
 
-                        // exclude divs and inputs
-                        var datastring = $('#command_form :not(.arg-field textarea, .arg-field select)').serialize();
-                        console.log(datastring);
+                    $('#id_command_args').val(args_str);
 
+                    // exclude divs and inputs
+                    var data_str = $('#command_form :not(.form-area-arg-field textarea, .form-area-arg-field select)')
+                    .serialize();
+
+                    $.ajax({
+                        url: 'index',
+                        type: 'POST',
+                        data: data_str,
+                    })
+                    .done(function(to_command_resp) {
+                        console.log(to_command_resp);
+                        $('#ajax_status').empty();
+                        if (to_command_resp.form_valid) {
+                            $('#ajax_status').text(
+                            `AJAX request with command ${selected_command} (command_id: ${command_id})
+                            was successfully processed.`
+                            );
+                        } else {
+                            $('#ajax_status').text(
+                            `Server was not returned confirmation about processing command
+                            ${selected_command} (command_id: ${command_id}) Try again.`
+                             );
+                        }
                         $.ajax({
-                            url: 'index',
-                            type: 'POST',
-                            data: datastring,
+                            url: 'generate_command_id',
+                            type: 'GET',
                         })
-                        .done(function(response) {
-                            console.log(response);
-                            $('#ajax_status').empty();
-                            if (response.form_valid) {
-                                $('#ajax_status').append('AJAX request with command '
-                                + selected_command + ' was successfully processed');
-                            } else {
-                                $('#ajax_status').append('Server was not returned confirmation about processing command '
-                                + selected_command + '. Try again.');
-                            }
-                        })
-                        .fail(function(response) {
-                            console.log(response);
-                            if (!response.form_valid) {
-                                $('#ajax_status').append('AJAX request with command '
-                                + selected_command +
-                                ' was not successfully processed. Form validation failed.');
-                            } else {
-                                $('#ajax_status').append('Server was unable to process AJAX request with command '
-                                + selected_command + '. Unknown error');
-                            }
+                        .done(function(to_command_id_resp) {
+                            console.log(to_command_id_resp);
+                            $('#id_command_id').val(to_command_id_resp.command_id);
+                            })
+                        .fail(function(uid_response) {
+                            console.log(uid_response);
+                            alert('Unable to get new command_id, please hit CTRL+R to refresh site!');
                         });
+                    })
+                    .fail(function(to_command_resp) {
+                        console.log(to_command_resp);
+                        if (!to_command_resp.form_valid) {
+                            $('#ajax_status').text(
+                            `AJAX request with command ${selected_command} (command_id: ${command_id})
+                            was not successfully processed. Form validation failed.`
+                            );
+                        } else {
+                            $('#ajax_status').text(
+                            `Server was unable to process AJAX request with command
+                            ${selected_command}(command_id: ${command_id}) Unknown error.`
+                            );
+                        }
                     });
                 });
-            </script>
-    <div class="ajax-status" id="ajax_status">
-        Brak informacji o statusie żądania AJAX.
+            });
+        </script>
+    <div id="ajax_status" class="ajax-status" >
+        No information about last AJAX request.
     </div>
     <div id="fresh_client_table">
-        <script>
+    </div>
+    <script>
             // Import a table with users from another file
             $('document').ready(function(){
                 setInterval(function(){
                     $.ajax({
                         url: 'client_table #client_table',
-                    }).done(function(data) {
-                        $('#fresh_client_table').html(data);
+                    })
+                    .done(function(fetched_table) {
+                        // console.log(fetched_table);
+                        $('#fresh_client_table').html(fetched_table);
+                    })
+                    .fail(function() {
+                        $('#fresh_client_table').text('Unable to load data.');
                     });
                 }, 10000);
             });
-        </script>
-    </div>
+            var sec = 10;
+            setInterval(function() {
+                sec--;
+                $('#refresh_counter').text(`Remaning time to refresh: ${sec} seconds.`);
+                if (sec == 0) {
+                    sec = 10;
+                }
+            }, 1000);
+    </script>
 </body>
 </html>
