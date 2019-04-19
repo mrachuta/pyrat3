@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     {% load user_tags %}
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>pyrat :: client list</title>
 </head>
 <body>
     <div id="client_table">
+        <div id="refresh_counter" class="refresh_counter">Table refreshed.</div>
         <table class="client-table">
             <tr>
-                <th>Pos</th>
-                <th>Client id</th>
-                <th>PC UUID</th>
-                <th>Join date</th>
-                <th>MAC</th>
-                <th>OS</th>
-                <th>Name</th>
-                <th>Ext IP</th>
-                <th>Int IP</th>
-                <th>Country</th>
-                <th>Last command ID</th>
-                <!-- <th>Last command date/time</th> -->
-                <th>Last command</th>
-                <th>Last command args</th>
-                <th>Last command result</th>
-                <!-- <th>Last command result date/time</th> -->
-                <th>Ping</th>
-                <th>Status</th>
-                <th>Files</th>
+                <th id="client_table_pos" class="client-table-s">Pos</th>
+                <th id="client_table_client_id" class="client-table-m">Client ID</th>
+                <th id="client_table_pc_uuid" class="client-table-uuid">PC UUID</th>
+                <th id="client_table_join_date">Join date</th>
+                <th id="client_table_mac" class="client-table-m">MAC</th>
+                <th id="client_table_os" class="client-table-m">OS</th>
+                <th id="client_table_name" class="client-table-m">Name</th>
+                <th id="client_table_ext_ip" class="client-table-m">External IP</th>
+                <th id="client_table_int_ip" class="client-table-m">Internal IP</th>
+                <th id="client_table_country" class="client-table-s">Country</th>
+                <th id="client_table_command">Command ID</th>
+                <th id="client_table_command_id">Command</th>
+                <th id="client_table_command_args">Command args</th>
+                <th id="client_table_command_result">Command result</th>
+                <th id="client_table_ping" class="client-table-m" >Ping</th>
+                <th id="client_table_status" class="client-table-m">Status</th>
+                <th id="client_table_files" class="client-table-s">Files</th>
             </tr>
             {% for client in clients %}
             <tr>
@@ -41,11 +42,10 @@
                 <td>{{ client.ext_ip }}</td>
                 <td>{{ client.int_ip }}</td>
                 <td>{{ client.country }}</td>
-                <td>{{ client.last_command_id }} ({{ client.last_command_datetime|date:"Y-m-d H:i:s" }})</td>
-                <td>{{ client.last_command }}</td>
-                <td>{{ client.last_command_args }}</td>
-                <td>{{ client.last_command_result|linebreaks }}</td>
-                <!-- <td>{{ client.last_command_result_datetime }}</td> -->
+                <td>{{ client.command_id }} ({{ client.command_datetime|date:"Y-m-d H:i:s" }})</td>
+                <td>{{ client.command }}</td>
+                <td>{{ client.command_args }}</td>
+                <td>{{ client.command_result|linebreaks }}</td>
                 {% with client.last_activity_datetime|timediff as ping %}
                 <td>
                     {% if ping < 16 %}
@@ -57,7 +57,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if client.last_command_id in client.last_command_result and ping < 16  %}
+                    {% if client.last_command_id in client.command_result and ping < 16  %}
                     IDDLE
                     {% elif ping > 100 %}
                     ------

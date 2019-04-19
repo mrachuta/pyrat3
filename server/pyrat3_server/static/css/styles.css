@@ -11,37 +11,37 @@ label {
 }
 
 .form-area {
-    height: 180px;
+    height: 200px;
     width: 100%;
 }
 
-.form-area-last-command-id-field {
+.form-area-command-id-box {
     display: none;
 }
 
-.form-area-client-id-field {
+.form-area-client-id-box {
     height: 180px;
     width: 520px;
 }
 
 #id_client_id,
-#id_last_command_args {
+#id_command_args {
     height: 150px;
     width: 500px;
 }
 
-.form-area-last-command-field {
+.form-area-command-box {
     height: 180px;
     width: 300px;
 }
 
-.form-area-client-id-field,
-.form-area-last-command-field,
-.form-area-last-command-args-field {
+.form-area-client-id-box,
+.form-area-command-box,
+.form-area-command-args-box {
     float: left;
 }
 
-.arg-field {
+.form-area-arg-field {
     margin-top: 15px;
     margin-right: 15px;
     width: auto;
@@ -49,29 +49,34 @@ label {
     float: left;
 }
 
-.arg-field textarea {
+.form-area-arg-field textarea {
     resize: horizontal;
     width: 180px;
     min-width: 200px;
     height: 15px;
 }
 
-.form-area-last-command-args-field {
+.form-area-command-args-box {
     display: none;
     height: 180px;
-    width: 700px;
+    /* calculation of width */
+    width: calc(100% - 520px - 300px);
 }
-
+/*
 .form-area-last-command-args-field-test {
     display: none;
-    /* height: 200px;
-    width: 700px; */
+    height: 200px;
+    width: 700px;
+}
+*/
+
+.form-area-initial-args-box {
+    display: block;
+    height: 180px;
+    width: auto;
 }
 
-.form-area-last-command-args-field-empty {
-}
-
-.send-command {
+.form-area-send-command {
     display: block;
 }
 
@@ -79,13 +84,19 @@ label {
     margin-top: 15px;
     margin-bottom: 15px;
     display: block;
-    height: 40px;
+    height: 20px;
     width: 100%;
 }
 
+.refresh-counter {
+    display: block;
+    text-align: right;
+}
+
 .client-table {
+    word-wrap: break-word;
     font-size: 15px;
-    border: 1px solid #CCCCCC;
+    border: 1px solid #CCC;
     border-collapse: collapse;
     border-spacing: 50px 0;
     width: 100%;
@@ -94,7 +105,15 @@ label {
 }
 
 .client-table th, td {
-    border: 1px solid #CCCCCC;
+    border: 1px solid #CCC;
+}
+
+.client-table-s {
+    width: 25px;
+}
+
+.client-table-m {
+    width: 75px;
 }
 
 .green {
