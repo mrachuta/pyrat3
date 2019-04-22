@@ -108,12 +108,21 @@ label {
     border: 1px solid #CCC;
 }
 
-.client-table-s {
+th.client-table-s {
     width: 25px;
 }
 
-.client-table-m {
+th.client-table-m {
     width: 75px;
+    word-break: break-all;
+}
+
+th.client-table-l {
+    width: 150px;
+}
+
+th.client-table-xl {
+    width: 290px;
 }
 
 .green {
