@@ -14,21 +14,23 @@
             <tr>
                 <th id="client_table_pos" class="client-table-s">Pos</th>
                 <th id="client_table_client_id" class="client-table-m">Client ID</th>
-                <th id="client_table_pc_uuid" class="client-table-uuid">PC UUID</th>
-                <th id="client_table_join_date">Join date</th>
+                <th id="client_table_pc_uuid" class="client-table-xl">PC UUID</th>
+                <th id="client_table_join_date" class="client-table-l">Join date</th>
+                <!--
                 <th id="client_table_mac" class="client-table-m">MAC</th>
                 <th id="client_table_os" class="client-table-m">OS</th>
                 <th id="client_table_name" class="client-table-m">Name</th>
                 <th id="client_table_ext_ip" class="client-table-m">External IP</th>
                 <th id="client_table_int_ip" class="client-table-m">Internal IP</th>
                 <th id="client_table_country" class="client-table-s">Country</th>
-                <th id="client_table_command">Command ID</th>
-                <th id="client_table_command_id">Command</th>
-                <th id="client_table_command_args">Command args</th>
+                -->
+                <th id="client_table_command_id" class="client-table-l">Command ID</th>
+                <th id="client_table_command" class="client-table-m">Command</th>
+                <th id="client_table_command_args" class="client-table-m">Command args</th>
                 <th id="client_table_command_result">Command result</th>
                 <th id="client_table_ping" class="client-table-m" >Ping</th>
                 <th id="client_table_status" class="client-table-m">Status</th>
-                <th id="client_table_files" class="client-table-s">Files</th>
+                <th id="client_table_files" class="client-table-m">Files</th>
             </tr>
             {% for client in clients %}
             <tr>
@@ -36,12 +38,14 @@
                 <td>{{ client.client_id }}</td>
                 <td>{{ client.pc_uuid }}</td>
                 <td>{{ client.join_datetime|date:"Y-m-d H:i:s" }}</td>
+                <!--
                 <td>{{ client.mac }}</td>
                 <td>{{ client.os }}</td>
                 <td>{{ client.name }}</td>
                 <td>{{ client.ext_ip }}</td>
                 <td>{{ client.int_ip }}</td>
                 <td>{{ client.country }}</td>
+                -->
                 <td>{{ client.command_id }} ({{ client.command_datetime|date:"Y-m-d H:i:s" }})</td>
                 <td>{{ client.command }}</td>
                 <td>{{ client.command_args }}</td>
