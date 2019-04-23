@@ -108,21 +108,51 @@ label {
     border: 1px solid #CCC;
 }
 
+tr.client-table-main-row {
+    height: 30px;
+}
+
+tr.client-table-main-row p {
+    margin: 0px;
+}
+
 th.client-table-s {
     width: 25px;
 }
 
 th.client-table-m {
-    width: 75px;
+    width: 55px;
     word-break: break-all;
 }
 
 th.client-table-l {
-    width: 150px;
+    width: 90px;
 }
 
 th.client-table-xl {
+    width: 145px;
+    word-wrap: break-word;
+}
+
+th.client-table-xxl {
     width: 290px;
+}
+
+tr.client-table-main-row a {
+    display: block;
+    color: black;
+    text-decoration: none;
+}
+
+tr.client-table-main-row:hover,
+tr.client-table-main-row:hover a {
+    background-color: #333333;
+    color: white;
+    text-decoration: none;
+}
+
+tr.client-table-info-row {
+    display: none;
 }
 
 .green {
