@@ -13,9 +13,9 @@
         <table class="client-table">
             <tr>
                 <th id="client_table_pos" class="client-table-s">Pos</th>
-                <th id="client_table_client_id" class="client-table-m">Client ID</th>
-                <th id="client_table_pc_uuid" class="client-table-xl">PC UUID</th>
-                <th id="client_table_join_date" class="client-table-l">Join date</th>
+                <th id="client_table_client_id" class="client-table-l">Client ID</th>
+                <th id="client_table_pc_uuid" class="client-table-xxl">PC UUID</th>
+                <th id="client_table_join_date" class="client-table-xl">Join date</th>
                 <!--
                 <th id="client_table_mac" class="client-table-m">MAC</th>
                 <th id="client_table_os" class="client-table-m">OS</th>
@@ -24,20 +24,20 @@
                 <th id="client_table_int_ip" class="client-table-m">Internal IP</th>
                 <th id="client_table_country" class="client-table-s">Country</th>
                 -->
-                <th id="client_table_command_id" class="client-table-l">Command ID</th>
-                <th id="client_table_command" class="client-table-m">Command</th>
-                <th id="client_table_command_args" class="client-table-m">Command args</th>
+                <th id="client_table_command_id" class="client-table-xl">Command ID</th>
+                <th id="client_table_command" class="client-table-l">Command</th>
+                <th id="client_table_command_args" class="client-table-xl">Command args</th>
                 <th id="client_table_command_result">Command result</th>
                 <th id="client_table_ping" class="client-table-m" >Ping</th>
                 <th id="client_table_status" class="client-table-m">Status</th>
                 <th id="client_table_files" class="client-table-m">Files</th>
             </tr>
             {% for client in clients %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ client.client_id }}</td>
-                <td>{{ client.pc_uuid }}</td>
-                <td>{{ client.join_datetime|date:"Y-m-d H:i:s" }}</td>
+            <tr id="client_table_{{ client.client_id }}_main_row" class="client-table-main-row">
+                <td><a onclick="show_or_hide_info(this);">{{ forloop.counter }}</a></td>
+                <td><a onclick="show_or_hide_info(this);">{{ client.client_id }}</a></td>
+                <td><a onclick="show_or_hide_info(this);">{{ client.pc_uuid }}</a></td>
+                <td><a onclick="show_or_hide_info(this);">{{ client.join_datetime|date:"Y-m-d H:i:s" }}</a></td>
                 <!--
                 <td>{{ client.mac }}</td>
                 <td>{{ client.os }}</td>
@@ -46,12 +46,19 @@
                 <td>{{ client.int_ip }}</td>
                 <td>{{ client.country }}</td>
                 -->
-                <td>{{ client.command_id }} ({{ client.command_datetime|date:"Y-m-d H:i:s" }})</td>
-                <td>{{ client.command }}</td>
-                <td>{{ client.command_args }}</td>
-                <td>{{ client.command_result|linebreaks }}</td>
+                <td>
+                    <a onclick="show_or_hide_info(this);">
+                    [{{ client.command_id }}]
+                    <br>
+                    ({{ client.command_datetime|date:"Y-m-d H:i:s" }})
+                    </a>
+                </td>
+                <td><a onclick="show_or_hide_info(this);">{{ client.command }}</a></td>
+                <td><a onclick="show_or_hide_info(this);">{{ client.command_args|pretty_args|safe }}</a></td>
+                <td><a onclick="show_or_hide_info(this);">{{ client.command_result|linebreaks|truncatechars:"300" }}</a></td>
                 {% with client.last_activity_datetime|timediff as ping %}
                 <td>
+                    <a onclick="show_or_hide_info(this);">
                     {% if ping < 16 %}
                     <span class="green">{{ ping }}</span>
                     {% elif ping < 100 %}
@@ -59,21 +66,34 @@
                     {% else %}
                     <span class="red">Offline</span>
                     {% endif %}
+                    </a>
                 </td>
                 <td>
-                    {% if client.last_command_id in client.command_result and ping < 16  %}
+                    <a onclick="show_or_hide_info(this);">
+                    {% if client.command_id in client.command_result and ping < 16 %}
                     IDDLE
                     {% elif ping > 100 %}
                     ------
                     {% else %}
                     WORKING
                     {% endif %}
+                    </a>
                 </td>
                 {% endwith %}
                 <td><a href="/media/{{ client.client_id }}/">FILES</a></td>
             </tr>
+            <tr id="client_table_{{ client.client_id }}_info_row" class="client-table-info-row">
+                <td></td>
+                <td><b>Country:</b> {{ client.country }}</td>
+                <td><b>MAC:</b> {{ client.mac }} </td>
+                <td colspan="2"><b>OS:</b> {{ client.os }}</td>
+                <td colspan="2"><b>Name:</b> {{ client.name }}</td>
+                <td><b>Ext IP:</b> {{ client.ext_ip }}</td>
+                <td colspan="3"><b>Int IP:</b> {{ client.int_ip }}</td>
+            </tr>
             {% endfor %}
         </table>
+
     </div>
 </body>
 </html>

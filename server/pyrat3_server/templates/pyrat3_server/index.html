@@ -25,6 +25,16 @@
                 });
             });
         });
+        function show_or_hide_info(element) {
+            console.log($(element).parents().eq(1).attr('id'));
+            var cli_id = $('#' + $(element).parents().eq(1).attr('id') + ' td:nth-child(2)').text();
+            var div_id = "#client_table_" + cli_id + "_info_row";
+            if ($(div_id).is(":visible")) {
+                $(div_id).hide();
+            } else {
+                $(div_id).show();
+            }
+        };
     </script>
 </head>
 <body>
