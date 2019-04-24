@@ -2,6 +2,11 @@ from django.db import models
 import uuid
 from django.utils import timezone
 from time import gmtime, strftime
+import uuid
+
+
+def short_uuid():
+    return uuid.uuid4().hex[:8]
 
 
 # Create your models here.
@@ -9,7 +14,7 @@ class Client(models.Model):
 
     # change PK to ID due to prevent detection of associated clients
 
-    client_id = models.CharField(primary_key=True, default=uuid.uuid4().hex[:8], editable=False, max_length=8)
+    client_id = models.CharField(primary_key=True, default=short_uuid, editable=False, max_length=8)
     pc_uuid = models.CharField(max_length=36)
     join_datetime = models.DateTimeField(default=timezone.now)
     mac = models.CharField(max_length=12)
@@ -30,6 +35,7 @@ class Client(models.Model):
 
     def __str__(self):
         return self.client_id
+
 
 
 
