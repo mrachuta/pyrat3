@@ -11,16 +11,6 @@ $(document).ready(function(){
             $(this).attr('required', 'required');
         });
     });
-    function show_or_hide_info(element) {
-        console.log($(element).parents().eq(1).attr('id'));
-        var cli_id = $('#' + $(element).parents().eq(1).attr('id') + ' td:nth-child(2)').text();
-        var div_id = "#client_table_" + cli_id + "_info_row";
-        if ($(div_id).is(":visible")) {
-            $(div_id).hide();
-        } else {
-            $(div_id).show();
-        }
-    };
     $('#command_form').on('submit', function(e) {
         e.preventDefault();
 
@@ -95,26 +85,35 @@ $(document).ready(function(){
             }
         });
     });
-    function update_client_table(){
-        setInterval(function(){
-            $.ajax({
-                url: 'client_table #client_table',
-            })
-            .done(function(fetched_table) {
-                // console.log(fetched_table);
-                $('#fresh_client_table').html(fetched_table);
-            })
-            .fail(function() {
-                $('#fresh_client_table').text('Unable to load data.');
-            });
-        }, 10000);
-        var sec = 10;
-        setInterval(function() {
-            sec--;
-            $('#refresh_counter').text(`Remaning time to refresh: ${sec} seconds.`);
-            if (sec == 0) {
-                sec = 10;
+    setInterval(function(){
+        $.ajax({
+            url: 'client_table #client_table',
+        })
+        .done(function(fetched_table) {
+            // console.log(fetched_table);
+            $('#fresh_client_table').html(fetched_table);
+        })
+        .fail(function() {
+            $('#fresh_client_table').text('Unable to load data.');
+        });
+    }, 10000);
+    /* może ttuaj ttrzeba odrębną funkcje ?????? */
+    var sec = 10;
+    setInterval(function() {
+        sec--;
+        $('#refresh_counter').text(`Remaning time to refresh: ${sec} seconds.`);
+        if (sec == 0) {
+            sec = 10;
         }
     }, 1000);
-    });
 });
+function show_or_hide_info(element) {
+    console.log($(element).parents().eq(1).attr('id'));
+    var cli_id = $('#' + $(element).parents().eq(1).attr('id') + ' td:nth-child(2)').text();
+    var div_id = "#client_table_" + cli_id + "_info_row";
+    if ($(div_id).is(":visible")) {
+        $(div_id).hide();
+    } else {
+        $(div_id).show();
+    }
+};
