@@ -1,119 +1,164 @@
-$(document).ready(function(){
-    $('input[type="radio"]').click(function(){
-        var command = $(this).val();
-        $("div.form-area-initial-args-box").hide();
-        $("div.form-area-command-args-box").hide();
-        $("div.form-area-command-args-box > .form-area-arg-field textarea, select").each(function() {
-            $(this).removeAttr('required');
-        });
-        $("#form_area_" + command + "_args_box").show();
-        $("#form_area_" + command + "_args_box > .form-area-arg-field textarea, select").each(function() {
-            $(this).attr('required', 'required');
-        });
+function changeCommandWrapper () {
+  $('input[type="radio"]').click(function () {
+    var command = $(this).val();
+    $("div.form-area-initial-args-box").hide();
+    $("div.form-area-command-args-box").hide();
+    $("div.form-area-command-args-box > .form-area-arg-field textarea, select").each(function() {
+        $(this).removeAttr('required');
     });
-    $('#command_form').on('submit', function(e) {
-        e.preventDefault();
-
-        var args_dict = {};
-        var selected_command = $('#form_area_command_box input:checked').attr('value');
-        var command_id = $('#id_command_id').val();
-        console.log(selected_command);
-
-        $(`#form_area_${selected_command}_args_box input`).each(function () {
-            args_dict[this.id] = this.value;
-        });
-        $(`#form_area_${selected_command}_args_box textarea`).each(function () {
-            args_dict[this.id] = this.value;
-        });
-        $(`#form_area_${selected_command}_args_box select`).each(function () {
-            args_dict[this.id] = this.value;
-        });
-
-        args_str = JSON.stringify(args_dict);
-        console.log(args_str);
-
-        $('#id_command_args').val(args_str);
-
-        // exclude divs and inputs
-        var data_str = $('#command_form :not(.form-area-arg-field textarea, .form-area-arg-field select)')
-        .serialize();
-
-        $.ajax({
-            url: 'index',
-            type: 'POST',
-            data: data_str,
-        })
-        .done(function(to_command_resp) {
-            console.log(to_command_resp);
-            $('#ajax_status').empty();
-            if (to_command_resp.form_valid) {
-                $('#ajax_status').text(
-                `AJAX request with command ${selected_command} (command_id: ${command_id})
-                was successfully processed.`
-                );
-            } else {
-                $('#ajax_status').text(
-                `Server was not returned confirmation about processing command
-                ${selected_command} (command_id: ${command_id}) Try again.`
-                 );
-            }
-            $.ajax({
-                url: 'generate_command_id',
-                type: 'GET',
-            })
-            .done(function(to_command_id_resp) {
-                console.log(to_command_id_resp);
-                $('#id_command_id').val(to_command_id_resp.command_id);
-                })
-            .fail(function(uid_response) {
-                console.log(uid_response);
-                alert('Unable to get new command_id, please hit CTRL+R to refresh site!');
-            });
-        })
-        .fail(function(to_command_resp) {
-            console.log(to_command_resp);
-            if (!to_command_resp.form_valid) {
-                $('#ajax_status').text(
-                `AJAX request with command ${selected_command} (command_id: ${command_id})
-                was not successfully processed. Form validation failed.`
-                );
-            } else {
-                $('#ajax_status').text(
-                `Server was unable to process AJAX request with command
-                ${selected_command}(command_id: ${command_id}) Unknown error.`
-                );
-            }
-        });
+    $("#form_area_" + command + "_args_box").show();
+    $("#form_area_" + command + "_args_box > .form-area-arg-field textarea, select").each(function() {
+        $(this).attr('required', 'required');
     });
-    setInterval(function(){
-        $.ajax({
-            url: 'client_table #client_table',
-        })
-        .done(function(fetched_table) {
-            // console.log(fetched_table);
-            $('#fresh_client_table').html(fetched_table);
-        })
-        .fail(function() {
-            $('#fresh_client_table').text('Unable to load data.');
-        });
-    }, 10000);
-    /* może ttuaj ttrzeba odrębną funkcje ?????? */
-    var sec = 10;
-    setInterval(function() {
-        sec--;
-        $('#refresh_counter').text(`Remaning time to refresh: ${sec} seconds.`);
-        if (sec == 0) {
-            sec = 10;
-        }
-    }, 1000);
-});
-function show_or_hide_info(element) {
-    console.log($(element).parents().eq(1).attr('id'));
-    var cli_id = $('#' + $(element).parents().eq(1).attr('id') + ' td:nth-child(2)').text();
-    var div_id = "#client_table_" + cli_id + "_info_row";
-    if ($(div_id).is(":visible")) {
-        $(div_id).hide();
+  });
+}
+
+function addOrRemoveArgsField () {
+  var maxFields = 8;
+  var minFields = 2;
+  var fieldCounter = 1;
+  var wrapper = $('#form_area_run_command_args_box');
+
+  $(wrapper).on('click', '#add_input', function (e) {
+    e.preventDefault();
+    var totalFields = $('#form_area_run_command_args_box > div').length
+    if(totalFields <= maxFields){
+      // Additional div must be added, for removing button function
+      $(wrapper).append(`<div class="form-area-arg-field"><label for="arg${fieldCounter}">Arg${fieldCounter}:</label>\
+      <textarea name="arg${fieldCounter}" id="arg${fieldCounter}" required="required"></textarea></div>`);
+      fieldCounter++;
     } else {
-        $(div_id).show();
+      alert('Maximum field count was reached');
     }
+  });
+  $(wrapper).on('click', '#remove_input', function (e) {
+    e.preventDefault();
+    var totalFields = $('#form_area_run_command_args_box > div').length
+    if(totalFields > minFields){
+      $(wrapper).children().last().remove();
+      fieldCounter--;
+    } else {
+      alert('Minimum field count was reached');
+    }
+  });
+}
+
+function submitCommand () {
+  $('#command_form').on('submit', function (element) {
+    element.preventDefault();
+
+    var argsDict = {};
+    var selectedCommand = $('#form_area_command_box input:checked').attr('value');
+    var commandId = $('#id_command_id').val();
+    console.log(selectedCommand);
+
+    $(`#form_area_${selectedCommand}_args_box input`).each(function () {
+      argsDict[this.id] = this.value;
+    });
+    $(`#form_area_${selectedCommand}_args_box textarea`).each(function () {
+      argsDict[this.id] = this.value;
+    });
+    $(`#form_area_${selectedCommand}_args_box select`).each(function () {
+      argsDict[this.id] = this.value;
+    });
+
+    var argsStr = JSON.stringify(argsDict);
+    console.log(argsStr);
+
+    $('#id_command_args').val(argsStr);
+
+    // exclude divs and inputs
+    var dataStr = $(
+    '#command_form :not(.form-area-arg-field textarea, .form-area-arg-field select)'
+    ).serialize();
+
+    $.ajax({
+      url: '/pyrat3_server/index/',
+      type: 'POST',
+      data: dataStr,
+    })
+    .done(function (toCommandResp) {
+      console.log(toCommandResp);
+      $('#ajax_status').empty();
+      if (toCommandResp.form_valid) {
+        $('#ajax_status').text(
+        `AJAX request with command ${selectedCommand} (command_id: ${commandId})
+        was successfully processed.`
+        );
+      } else {
+        $('#ajax_status').text(
+        `Server was not returned confirmation about processing command
+        ${selectedCommand} (command_id: ${commandId}) Try again.`
+         );
+    }
+    $.ajax({
+      url: '/pyrat3_server/generate_command_id/',
+      type: 'GET',
+    })
+    .done(function (toCommandIdResp) {
+      console.log(toCommandIdResp);
+      $('#id_command_id').val(toCommandIdResp.command_id);
+      })
+    .fail(function (uidResponse) {
+      console.log(uidResponse);
+      alert('Unable to get new command_id, please hit CTRL+R to refresh site!');
+    });
+    })
+      .fail(function (toCommandResp) {
+        console.log(toCommandResp);
+        if (!toCommandResp.form_valid) {
+          $('#ajax_status').text(
+          `AJAX request with command ${selectedCommand} (command_id: ${commandId})
+          was not successfully processed. Form validation failed.`
+          );
+        } else {
+          $('#ajax_status').text(
+          `Server was unable to process AJAX request with command
+          ${selectedCommand}(command_id: ${commandId}) Unknown error.`
+          );
+        }
+      });
+  });
+}
+
+function loadClientTable () {
+  var refreshInterval = 10;
+  setInterval(function () {
+    $.ajax({
+      url: '/pyrat3_server/client_table/#client_table',
+    })
+    .done(function (fetchedTable) {
+      // console.log(fetched_table);
+      $('#fresh_client_table').html(fetchedTable);
+    })
+    .fail(function() {
+      $('#fresh_client_table').text('Unable to load data.');
+    });
+  }, (refreshInterval*1000));
+  setInterval(function () {
+      refreshInterval--;
+      $('#refresh_counter').text(`Remaning time to refresh: ${refreshInterval} seconds.`);
+      if (refreshInterval == 0) {
+          refreshInterval = 10;
+      }
+  }, 1000);
+}
+
+function showOrHideInfo (element) {
+  var elementGrandFather = $(element).parents().eq(1).attr('id');
+  console.log(elementGrandFather);
+  var clientId = $(`#${elementGrandFather} td:nth-child(2)`).text();
+  var divId = `#client_table_${clientId}_info_row`;
+  if ($(divId).is(":visible")) {
+    $(divId).hide();
+  } else {
+    $(divId).show();
+  }
 };
+
+$(document).ready(function () {
+  changeCommandWrapper();
+  addOrRemoveArgsField();
+  submitCommand();
+  loadClientTable();
+});

@@ -27,7 +27,7 @@ from django.http import JsonResponse
 from ast import literal_eval
 
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 
 def new_command_id(size=6, chars=string.ascii_uppercase + string.digits):
@@ -134,6 +134,14 @@ class ClientUploadFile(generic.FormView):
     template_name = 'pyrat3_server/upload.html'
     form_class = ClientSendFileForm
 
+    def get(self, request, *args, **kwargs):
+
+        if Client.objects.filter(pk=self.kwargs['pk']).exists():
+            """Handle GET requests: instantiate a blank version of the form."""
+            return self.render_to_response(self.get_context_data())
+        else:
+            raise Http404
+
     def post(self, request, *args, **kwargs):
 
         """
@@ -155,3 +163,5 @@ class ClientUploadFile(generic.FormView):
     def form_valid(self, form):
 
         return HttpResponse('OK')
+
+    # funkcja na odpowiedz w formie Json na valid i invalid form

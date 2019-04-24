@@ -34,10 +34,10 @@
             </tr>
             {% for client in clients %}
             <tr id="client_table_{{ client.client_id }}_main_row" class="client-table-main-row">
-                <td><a onclick="show_or_hide_info(this);">{{ forloop.counter }}</a></td>
-                <td><a onclick="show_or_hide_info(this);">{{ client.client_id }}</a></td>
-                <td><a onclick="show_or_hide_info(this);">{{ client.pc_uuid }}</a></td>
-                <td><a onclick="show_or_hide_info(this);">{{ client.join_datetime|date:"Y-m-d H:i:s" }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ forloop.counter }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ client.client_id }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ client.pc_uuid }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ client.join_datetime|date:"Y-m-d H:i:s" }}</a></td>
                 <!--
                 <td>{{ client.mac }}</td>
                 <td>{{ client.os }}</td>
@@ -47,18 +47,18 @@
                 <td>{{ client.country }}</td>
                 -->
                 <td>
-                    <a onclick="show_or_hide_info(this);">
+                    <a onclick="showOrHideInfo(this);">
                     [{{ client.command_id }}]
                     <br>
                     ({{ client.command_datetime|date:"Y-m-d H:i:s" }})
                     </a>
                 </td>
-                <td><a onclick="show_or_hide_info(this);">{{ client.command }}</a></td>
-                <td><a onclick="show_or_hide_info(this);">{{ client.command_args|pretty_args|safe }}</a></td>
-                <td><a onclick="show_or_hide_info(this);">{{ client.command_result|linebreaks|truncatechars:"300" }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ client.command }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ client.command_args|pretty_args|safe }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ client.command_result|linebreaks|truncatechars:"300" }}</a></td>
                 {% with client.last_activity_datetime|timediff as ping %}
                 <td>
-                    <a onclick="show_or_hide_info(this);">
+                    <a onclick="showOrHideInfo(this);">
                     {% if ping < 16 %}
                     <span class="green">{{ ping }}</span>
                     {% elif ping < 100 %}
@@ -69,7 +69,7 @@
                     </a>
                 </td>
                 <td>
-                    <a onclick="show_or_hide_info(this);">
+                    <a onclick="showOrHideInfo(this);">
                     {% if client.command_id in client.command_result and ping < 16 %}
                     IDDLE
                     {% elif ping > 100 %}

@@ -74,35 +74,6 @@
                     <label for="arg0">Arg0:</label>
                     <textarea name="arg0" id="arg0"></textarea>
                 </div>
-                <script>
-                    var max_fields = 8;
-                    var min_fields = 2;
-                    var ct = 1;
-                    var wrapper = $('#form_area_run_command_args_box');
-
-                    $(wrapper).on('click', '#add_input', function(e) {
-                        e.preventDefault();
-                        var total_fields = $('#form_area_run_command_args_box > div').length
-                        if(total_fields <= max_fields){
-                            // Additional div must be added, for removing button function
-                            $(wrapper).append(`<div class="form-area-arg-field"><label for="arg${ct}">Arg${ct}:</label>\
-                            <textarea name="arg${ct}" id="arg${ct}" required="required"></textarea></div>`);
-                            ct++;
-                        } else {
-                        alert('Maximum field count was reached');
-                        }
-                    });
-                    $(wrapper).on('click', '#remove_input', function(e) {
-                        e.preventDefault();
-                        var total_fields = $('#form_area_run_command_args_box > div').length
-                        if(total_fields > min_fields){
-                            $(wrapper).children().last().remove();
-                            ct--;
-                        } else {
-                        alert('Minimum field count was reached');
-                        }
-                    });
-                </script>
             </div>
             <div id="form_area_file_download_args_box" class="form-area-command-args-box">
                 <label>Download file args</label>

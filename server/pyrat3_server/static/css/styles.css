@@ -1,168 +1,168 @@
 .header-area {
-    height: 100px;
-    width: 100%;
-    text-align: center;
-    vertical-align: middle;
-    display: block;
+  height: 100px;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  display: block;
 }
 
 label {
-    display: block;
+  display: block;
 }
 
 .form-area {
-    height: 200px;
-    width: 100%;
+  height: 200px;
+  width: 100%;
 }
 
 .form-area-command-id-box {
-    display: none;
+  display: none;
 }
 
 .form-area-client-id-box {
-    height: 180px;
-    width: 520px;
+  height: 180px;
+  width: 520px;
 }
 
 #id_client_id,
 #id_command_args {
-    height: 150px;
-    width: 500px;
+  height: 150px;
+  width: 500px;
 }
 
 .form-area-command-box {
-    height: 180px;
-    width: 300px;
+  height: 180px;
+  width: 300px;
 }
 
 .form-area-client-id-box,
 .form-area-command-box,
 .form-area-command-args-box {
-    float: left;
+  float: left;
 }
 
 .form-area-arg-field {
-    margin-top: 15px;
-    margin-right: 15px;
-    width: auto;
-    height: 40px;
-    float: left;
+  margin-top: 15px;
+  margin-right: 15px;
+  width: auto;
+  height: 40px;
+  float: left;
 }
 
 .form-area-arg-field textarea {
-    resize: horizontal;
-    width: 180px;
-    min-width: 200px;
-    height: 15px;
+  resize: horizontal;
+  width: 180px;
+  min-width: 200px;
+  height: 15px;
 }
 
 .form-area-command-args-box {
-    display: none;
-    height: 180px;
-    /* calculation of width */
-    width: calc(100% - 520px - 300px);
+  display: none;
+  height: 180px;
+  /* calculation of width */
+  width: calc(100% - 520px - 300px);
 }
 /*
 .form-area-last-command-args-field-test {
-    display: none;
-    height: 200px;
-    width: 700px;
+  display: none;
+  height: 200px;
+  width: 700px;
 }
 */
 
 .form-area-initial-args-box {
-    display: block;
-    height: 180px;
-    width: auto;
+  display: block;
+  height: 180px;
+  width: auto;
 }
 
 .form-area-send-command {
-    display: block;
+  display: block;
 }
 
 .ajax-status {
-    margin-top: 15px;
-    margin-bottom: 15px;
-    display: block;
-    height: 20px;
-    width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  display: block;
+  height: 20px;
+  width: 100%;
 }
 
 .refresh-counter {
-    display: block;
-    text-align: right;
+  display: block;
+  text-align: right;
 }
 
 .client-table {
-    word-wrap: break-word;
-    font-size: 15px;
-    border: 1px solid #CCC;
-    border-collapse: collapse;
-    border-spacing: 50px 0;
-    width: 100%;
-    text-align: left;
-    display: table;
+  word-wrap: break-word;
+  font-size: 15px;
+  border: 1px solid #CCC;
+  border-collapse: collapse;
+  border-spacing: 50px 0;
+  width: 100%;
+  text-align: left;
+  display: table;
 }
 
 .client-table th, td {
-    border: 1px solid #CCC;
+  border: 1px solid #CCC;
 }
 
 tr.client-table-main-row {
-    height: 30px;
+  height: 30px;
 }
 
 tr.client-table-main-row p {
-    margin: 0px;
+  margin: 0px;
 }
 
 th.client-table-s {
-    width: 25px;
+  width: 25px;
 }
 
 th.client-table-m {
-    width: 55px;
-    word-break: break-all;
+  width: 55px;
+  word-break: break-all;
 }
 
 th.client-table-l {
-    width: 90px;
+  width: 90px;
 }
 
 th.client-table-xl {
-    width: 145px;
-    word-wrap: break-word;
+  width: 145px;
+  word-wrap: break-word;
 }
 
 th.client-table-xxl {
-    width: 290px;
+  width: 290px;
 }
 
 tr.client-table-main-row a {
-    display: block;
-    color: black;
-    text-decoration: none;
+  display: block;
+  color: black;
+  text-decoration: none;
 }
 
 tr.client-table-main-row:hover,
 tr.client-table-main-row:hover a {
-    background-color: #333333;
-    color: white;
-    text-decoration: none;
+  background-color: #333333;
+  color: white;
+  text-decoration: none;
 }
 
 tr.client-table-info-row {
-    display: none;
+  display: none;
 }
 
 .green {
-    color: green;
+  color: green;
 }
 
 .orange {
-    color: orange;
+  color: orange;
 }
 
 .red {
-    color: red;
+  color: red;
 }
