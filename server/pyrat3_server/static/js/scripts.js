@@ -2,18 +2,22 @@ function changeJobWrapper () {
   $('input[type="radio"]').click(function () {
     var command = $(this).val();
     $(".form-area-initial-args-box").hide();
-    $(".form-area-job-args-box").hide();
-    $(".form-area-job-args-box").each(function() {
-      $(".form-area-arg-field textarea, .form-area-arg-field select").each(function (){
-        $(this).removeAttr('required');
-        $(this).val('');
-      })
+    $(`#form_area_${command}_args_box > .form-area-arg-field textarea, .form-area-arg-field select`).each(function () {
+      $(this).attr('required', 'required');
     });
     $(`#form_area_${command}_args_box`).show();
-    $(`#form_area_${command}_args_box`).each(function() {
-      $(".form-area-arg-field textarea, .form-area-arg-field select").each(function () {
-        $(this).attr('required', 'required');
-      })
+    $('.form-area-job-args-box').each(function () {
+      // console.log(this);
+      elementId = $(this).attr('id');
+      // console.log(elementId);
+      if (!elementId.includes(command)) {
+        $(this).hide();
+        $('.form-area-arg-field > textarea, select', this).each(function () {
+          // console.log(this);
+          $(this).removeAttr('required');
+          $(this).val('');
+        })
+      }
     });
   });
 }
@@ -24,8 +28,8 @@ function addOrRemoveArgField () {
   var fieldCounter = 1;
   var wrapper = $('#form_area_run_command_args_box');
 
-  $(wrapper).on('click', '#add_input', function (e) {
-    e.preventDefault();
+  $(wrapper).on('click', '#add_input', function (element) {
+    element.preventDefault();
     var totalFields = $('#form_area_run_command_args_box > div').length
     if(totalFields <= maxFields){
       // Additional div must be added, for removing button function
@@ -158,15 +162,27 @@ function loadClientTable () {
 
 function showOrHideInfo (element) {
   var elementGrandFather = $(element).parents().eq(1).attr('id');
-  console.log(elementGrandFather);
+  // console.log(elementGrandFather);
   var clientId = $(`#${elementGrandFather} td:nth-child(2)`).text();
   var divId = `#client_table_${clientId}_info_row`;
+  var visibleDivs = [];
+  var client = [];
   if ($(divId).is(':visible')) {
     $(divId).hide();
   } else {
     $(divId).show();
   }
-};
+  $('.client-table-info-row').each(function () {
+    var infoRowId = `#${$(this).attr('id')}`;
+    if ($(infoRowId).is(':visible')) {
+      client = {id: infoRowId, visibility: true};
+      console.log(client);
+      visibleDivs.push(client);
+    }
+  });
+  localStorage.setItem('visible_divs', JSON.stringify(visibleDivs));
+}
+
 
 $(document).ready(function () {
   changeJobWrapper();

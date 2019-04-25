@@ -93,6 +93,16 @@
             </tr>
             {% endfor %}
         </table>
+        <script>
+            $(document).ready(function () {
+              var visibleDivs = JSON.parse(localStorage.getItem('visible_divs'));
+              if (visibleDivs.length) {
+                for (var i=0; i<visibleDivs.length; i++) {
+                  $(visibleDivs[i].id).show();
+                }
+              }
+            });
+        </script>
 
     </div>
 </body>

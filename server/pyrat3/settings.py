@@ -26,7 +26,7 @@ with open(os.path.join(os.getcwd(), 'pyrat3/secrets'), 'r') as s:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
