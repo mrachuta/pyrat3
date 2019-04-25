@@ -28,27 +28,27 @@ class ClientSendCommandForm(forms.ModelForm):
         model = Client
 
         fields = [
-            'command_id',
-            'command',
-            'command_args'
+            'job_id',
+            'job',
+            'job_args'
         ]
 
         labels = {
-            'command_id': 'Command ID',
-            'command': 'Command to execute',
-            'command_args': 'Command arguments'
+            'job_id': 'Job ID',
+            'job': 'Job to execute',
+            'job_args': 'Job arguments'
         }
 
         widgets = {
-            'command_id': forms.TextInput(attrs={'readonly': 'readonly'}),
-            'command': forms.RadioSelect(choices=commands),
+            'job_id': forms.TextInput(attrs={'readonly': 'readonly'}),
+            'job': forms.RadioSelect(choices=commands),
         }
 
     field_order = [
-        'command_id',
+        'job_id',
         'client_id',
-        'command',
-        'command_args',
+        'job',
+        'job_args',
     ]
     '''
     def __init__(self, *args, **kwargs):

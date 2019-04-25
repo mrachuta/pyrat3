@@ -15,7 +15,7 @@ label {
   width: 100%;
 }
 
-.form-area-command-id-box {
+.form-area-job-id-box {
   display: none;
 }
 
@@ -25,19 +25,19 @@ label {
 }
 
 #id_client_id,
-#id_command_args {
+#id_job_args {
   height: 150px;
   width: 500px;
 }
 
-.form-area-command-box {
+.form-area-job-box {
   height: 180px;
   width: 300px;
 }
 
 .form-area-client-id-box,
-.form-area-command-box,
-.form-area-command-args-box {
+.form-area-job-box,
+.form-area-job-args-box {
   float: left;
 }
 
@@ -56,7 +56,7 @@ label {
   height: 15px;
 }
 
-.form-area-command-args-box {
+.form-area-job-args-box {
   display: none;
   height: 180px;
   /* calculation of width */
@@ -76,7 +76,7 @@ label {
   width: auto;
 }
 
-.form-area-send-command {
+.form-area-submit-job {
   display: block;
 }
 
@@ -149,6 +149,7 @@ tr.client-table-main-row:hover a {
   background-color: #333333;
   color: white;
   text-decoration: none;
+  cursor: pointer;
 }
 
 tr.client-table-info-row {

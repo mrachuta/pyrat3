@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load user_tags %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>pyrat3 :: client {{ client_id }} files</title>
+</head>
+<body>
+    Files uploaded from remote client {{ client_id }}
+    <br>
+    <br>
+        {% if files %}
+        <ul>
+        {% for file in files %}
+            <li><a href="{% get_media_prefix %}{{ client_id }}/{{ file }}" target="_blank">{{ file }}</a></li>
+        {% endfor %}
+        </ul>
+        {% else %}
+        <h1>There is no files form this client</h1>
+        {% endif %}
+</body>
+</html>
