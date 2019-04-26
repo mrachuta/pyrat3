@@ -93,6 +93,21 @@
             </tr>
             {% endfor %}
         </table>
+        {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a class="change-page" href="{% url 'client_table' %}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a class="change-page" href="{% url 'client_table' %}?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+        {% endif %}
         <script>
             $(document).ready(function () {
               var visibleDivs = JSON.parse(localStorage.getItem('visible_divs'));
@@ -101,9 +116,13 @@
                   $(visibleDivs[i].id).show();
                 }
               }
+              $('.change-page').click(function (event) {
+                event.preventDefault();
+                clientTableCurrUrl = $(this).attr('href');
+                loadClientTable();
+              })
             });
         </script>
-
     </div>
 </body>
 </html>

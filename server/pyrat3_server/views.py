@@ -78,6 +78,7 @@ class ClientTable(generic.ListView):
 
     context_object_name = 'clients'
     template_name = 'pyrat3_server/client_table.html'
+    paginate_by = 5
 
     def get_queryset(self):
 

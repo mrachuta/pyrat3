@@ -136,20 +136,24 @@ function submitJob () {
   });
 }
 
+clientTableCurrUrl = '/pyrat3_server/client_table/#client_table';
+
 function loadClientTable () {
+  $.ajax({
+    url: clientTableCurrUrl,
+  })
+  .done(function (fetchedTable) {
+    // console.log(fetched_table);
+    $('#fresh_client_table').html(fetchedTable);
+  })
+  .fail(function() {
+    $('#fresh_client_table').text('Unable to load data.');
+  });
+}
+
+function refreshClientTable () {
   var refreshInterval = 10;
-  setInterval(function () {
-    $.ajax({
-      url: '/pyrat3_server/client_table/#client_table',
-    })
-    .done(function (fetchedTable) {
-      // console.log(fetched_table);
-      $('#fresh_client_table').html(fetchedTable);
-    })
-    .fail(function() {
-      $('#fresh_client_table').text('Unable to load data.');
-    });
-  }, (refreshInterval*1000));
+  setInterval(loadClientTable(), (refreshInterval*1000));
   setInterval(function () {
       refreshInterval--;
       $('#refresh_counter').text(
@@ -183,10 +187,9 @@ function showOrHideInfo (element) {
   localStorage.setItem('visible_divs', JSON.stringify(visibleDivs));
 }
 
-
 $(document).ready(function () {
   changeJobWrapper();
   addOrRemoveArgField();
   submitJob();
-  loadClientTable();
+  refreshClientTable();
 });
