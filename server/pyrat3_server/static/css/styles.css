@@ -93,6 +93,13 @@ label {
   text-align: right;
 }
 
+.fresh-client-table {
+  height: 650px;
+  max-height: 650px;
+  width: 100%;
+  display: block;
+}
+
 .client-table {
   word-wrap: break-word;
   font-size: 15px;
@@ -135,7 +142,7 @@ th.client-table-xl {
 }
 
 th.client-table-xxl {
-  width: 290px;
+  width: 300px;
 }
 
 tr.client-table-main-row a {
@@ -166,4 +173,15 @@ tr.client-table-info-row {
 
 .red {
   color: red;
+}
+
+.footer-area {
+  border: 1px solid #CCC;
+  margin-top: 10px;
+  height: 70px;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+  overflow: auto;
 }
