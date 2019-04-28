@@ -159,7 +159,7 @@ tr.client-table-main-row:hover a {
   cursor: pointer;
 }
 
-tr.client-table-info-row {
+tr.client-table-details-row {
   display: none;
 }
 

@@ -34,10 +34,10 @@
             </tr>
             {% for client in clients %}
             <tr id="client_table_{{ client.client_id }}_main_row" class="client-table-main-row">
-                <td><a onclick="showOrHideInfo(this);">{{ forloop.counter }}</a></td>
-                <td><a onclick="showOrHideInfo(this);">{{ client.client_id }}</a></td>
-                <td><a onclick="showOrHideInfo(this);">{{ client.pc_uuid }}</a></td>
-                <td><a onclick="showOrHideInfo(this);">{{ client.join_datetime|date:"Y-m-d H:i:s" }}</a></td>
+                <td><a onclick="showOrHideClientDetails(this);">{{ forloop.counter }}</a></td>
+                <td><a onclick="showOrHideClientDetails(this);">{{ client.client_id }}</a></td>
+                <td><a onclick="showOrHideClientDetails(this);">{{ client.pc_uuid }}</a></td>
+                <td><a onclick="showOrHideClientDetails(this);">{{ client.join_datetime|date:"Y-m-d H:i:s" }}</a></td>
                 <!--
                 <td>{{ client.mac }}</td>
                 <td>{{ client.os }}</td>
@@ -47,18 +47,18 @@
                 <td>{{ client.country }}</td>
                 -->
                 <td>
-                    <a onclick="showOrHideInfo(this);">
+                    <a onclick="showOrHideClientDetails(this);">
                     [{{ client.job_id }}]
                     <br>
                     ({{ client.job_datetime|date:"Y-m-d H:i:s" }})
                     </a>
                 </td>
-                <td><a onclick="showOrHideInfo(this);">{{ client.job }}</a></td>
-                <td><a onclick="showOrHideInfo(this);">{{ client.job_args|pretty_args|safe }}</a></td>
-                <td><a onclick="showOrHideInfo(this);">{{ client.job_result|linebreaks|truncatechars:"300" }}</a></td>
+                <td><a onclick="showOrHideClientDetails(this);">{{ client.job }}</a></td>
+                <td><a onclick="showOrHideClientDetails(this);">{{ client.job_args|pretty_args|safe }}</a></td>
+                <td><a onclick="showOrHideClientDetails(this);">{{ client.job_result|linebreaks|truncatechars:"300" }}</a></td>
                 {% with client.last_activity_datetime|timediff as ping %}
                 <td>
-                    <a onclick="showOrHideInfo(this);">
+                    <a onclick="showOrHideClientDetails(this);">
                     {% if ping < 16 %}
                     <span class="green">{{ ping }}</span>
                     {% elif ping < 100 %}
@@ -69,7 +69,7 @@
                     </a>
                 </td>
                 <td>
-                    <a onclick="showOrHideInfo(this);">
+                    <a onclick="showOrHideClientDetails(this);">
                     {% if client.job_id in client.job_result and ping < 16 %}
                     IDDLE
                     {% elif ping > 100 %}
@@ -82,7 +82,7 @@
                 {% endwith %}
                 <td><a href="{% url 'client_files' client.client_id %}" target="_blank">FILES</a></td>
             </tr>
-            <tr id="client_table_{{ client.client_id }}_info_row" class="client-table-info-row">
+            <tr id="client_table_{{ client.client_id }}_details_row" class="client-table-details-row">
                 <td></td>
                 <td><b>Country:</b> {{ client.country }}</td>
                 <td><b>MAC:</b> {{ client.mac }} </td>
@@ -108,21 +108,7 @@
             </span>
         </div>
         {% endif %}
-        <script>
-            $(document).ready(function () {
-              var visibleDivs = JSON.parse(localStorage.getItem('visible_divs'));
-              if (visibleDivs.length) {
-                for (var i=0; i<visibleDivs.length; i++) {
-                  $(visibleDivs[i].id).show();
-                }
-              }
-              $('.change-page').click(function (event) {
-                event.preventDefault();
-                clientTableCurrUrl = $(this).attr('href');
-                loadClientTable();
-              })
-            });
-        </script>
+        <script src="{% static 'js/cli.js' %}"></script>
     </div>
 </body>
 </html>
