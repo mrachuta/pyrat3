@@ -16,14 +16,6 @@
                 <th id="client_table_client_id" class="client-table-l">Client ID</th>
                 <th id="client_table_pc_uuid" class="client-table-xxl">PC UUID</th>
                 <th id="client_table_join_date" class="client-table-xl">Join date</th>
-                <!--
-                <th id="client_table_mac" class="client-table-m">MAC</th>
-                <th id="client_table_os" class="client-table-m">OS</th>
-                <th id="client_table_name" class="client-table-m">Name</th>
-                <th id="client_table_ext_ip" class="client-table-m">External IP</th>
-                <th id="client_table_int_ip" class="client-table-m">Internal IP</th>
-                <th id="client_table_country" class="client-table-s">Country</th>
-                -->
                 <th id="client_table_job_id" class="client-table-xl">Job ID</th>
                 <th id="client_table_job" class="client-table-l">Job</th>
                 <th id="client_table_job_args" class="client-table-xl">Job args</th>
@@ -38,14 +30,6 @@
                 <td><a onclick="showOrHideClientDetails(this);">{{ client.client_id }}</a></td>
                 <td><a onclick="showOrHideClientDetails(this);">{{ client.pc_uuid }}</a></td>
                 <td><a onclick="showOrHideClientDetails(this);">{{ client.join_datetime|date:"Y-m-d H:i:s" }}</a></td>
-                <!--
-                <td>{{ client.mac }}</td>
-                <td>{{ client.os }}</td>
-                <td>{{ client.name }}</td>
-                <td>{{ client.ext_ip }}</td>
-                <td>{{ client.int_ip }}</td>
-                <td>{{ client.country }}</td>
-                -->
                 <td>
                     <a onclick="showOrHideClientDetails(this);">
                     [{{ client.job_id }}]
@@ -55,7 +39,12 @@
                 </td>
                 <td><a onclick="showOrHideClientDetails(this);">{{ client.job }}</a></td>
                 <td><a onclick="showOrHideClientDetails(this);">{{ client.job_args|pretty_args|safe }}</a></td>
-                <td><a onclick="showOrHideClientDetails(this);">{{ client.job_result|linebreaks|truncatechars:"300" }}</a></td>
+                <td>
+                    <a onclick="showOrHideClientDetails(this);">
+                        {{ client.job_result|linebreaks|truncatechars:"300" }}
+                        <a class="job-results-window-link" href="#">Click for more</a>
+                    </a>
+                </td>
                 {% with client.last_activity_datetime|timediff as ping %}
                 <td>
                     <a onclick="showOrHideClientDetails(this);">
@@ -94,18 +83,18 @@
             {% endfor %}
         </table>
         {% if is_paginated %}
-        <div class="pagination">
-            <span class="page-links">
-                {% if page_obj.has_previous %}
-                    <a class="change-page" href="{% url 'client_table' %}?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-                <span class="page-current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-                {% if page_obj.has_next %}
-                    <a class="change-page" href="{% url 'client_table' %}?page={{ page_obj.next_page_number }}">next</a>
-                {% endif %}
-            </span>
+        <div class="client-table-pagination">
+        {% if page_obj.has_previous %}
+            <a class="change-page" href="{% url 'client_table' %}?page={{ page_obj.previous_page_number }}">previous</a>
+        {% else %}
+            <span class="change-page-inactive">previous</span>
+        {% endif %}
+            {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        {% if page_obj.has_next %}
+            <a class="change-page" href="{% url 'client_table' %}?page={{ page_obj.next_page_number }}">next</a>
+        {% else %}
+            <span class="change-page-inactive">next</span>
+        {% endif %}
         </div>
         {% endif %}
         <script src="{% static 'js/cli.js' %}"></script>

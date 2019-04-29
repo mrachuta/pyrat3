@@ -1,3 +1,10 @@
+.sticky-top {
+  position: -webkit-sticky;
+  position: sticky;
+}
+
+/* HEADER STYLING */
+
 .header-area {
   height: 100px;
   width: 100%;
@@ -5,6 +12,10 @@
   vertical-align: middle;
   display: block;
 }
+
+/* END OF HEADER STYLING */
+
+/* FORM AREA STYLING */
 
 label {
   display: block;
@@ -15,6 +26,9 @@ label {
   width: 100%;
 }
 
+/* Hide input with job_id.
+Value is generated on server side.
+Cannot be changed on client side */
 .form-area-job-id-box {
   display: none;
 }
@@ -24,17 +38,19 @@ label {
   width: 520px;
 }
 
-#id_client_id,
-#id_job_args {
+/* Adjust size of client-selection box */
+#id_client_id {
   height: 150px;
   width: 500px;
 }
 
+/* Adjust size of job-selection box */
 .form-area-job-box {
   height: 180px;
   width: 300px;
 }
 
+/* Draw all boxes from left to right */
 .form-area-client-id-box,
 .form-area-job-box,
 .form-area-job-args-box {
@@ -49,6 +65,7 @@ label {
   float: left;
 }
 
+/* Adjust parameters of textareas in arg box */
 .form-area-arg-field textarea {
   resize: horizontal;
   width: 180px;
@@ -56,29 +73,26 @@ label {
   height: 15px;
 }
 
-.form-area-job-args-box {
-  display: none;
-  height: 180px;
-  /* calculation of width */
-  width: calc(100% - 520px - 300px);
-}
-/*
-.form-area-last-command-args-field-test {
-  display: none;
-  height: 200px;
-  width: 700px;
-}
-*/
-
+/* Inital args box */
 .form-area-initial-args-box {
   display: block;
   height: 180px;
   width: auto;
 }
 
+/* Real arg-boxes - not displayed initially */
+.form-area-job-args-box {
+  display: none;
+  height: 180px;
+  /* calculation of width */
+  width: calc(100% - 520px - 300px);
+}
+
 .form-area-submit-job {
   display: block;
 }
+
+/* END OF FORM-AREA STYLING */
 
 .ajax-status {
   margin-top: 15px;
@@ -92,6 +106,8 @@ label {
   display: block;
   text-align: right;
 }
+
+/* CLIENT LIST STYLING */
 
 .fresh-client-table {
   height: 650px;
@@ -119,10 +135,13 @@ tr.client-table-main-row {
   height: 30px;
 }
 
+/* Remove margins on paragraphs -
+reduce height of Job Results row */
 tr.client-table-main-row p {
   margin: 0px;
 }
 
+/* Variants of rows (width) */
 th.client-table-s {
   width: 25px;
 }
@@ -138,31 +157,41 @@ th.client-table-l {
 
 th.client-table-xl {
   width: 145px;
-  word-wrap: break-word;
 }
 
 th.client-table-xxl {
   width: 300px;
 }
 
+/* Rows styling - for selected and unselected row */
+tr.client-table-main-row {
+  color: #000100;
+  background-color: #F8F8F8;
+}
+
 tr.client-table-main-row a {
   display: block;
-  color: black;
+  color: #000100;
+  background-color: #F8F8F8;
   text-decoration: none;
+}
+
+tr.client-table-main-row a.job-results-window-link {
+  color: red;
 }
 
 tr.client-table-main-row:hover,
 tr.client-table-main-row:hover a {
-  background-color: #333333;
-  color: white;
+  background-color: #000100;
+  color: #F8F8F8;
   text-decoration: none;
   cursor: pointer;
 }
-
-tr.client-table-details-row {
-  display: none;
+tr.client-table-main-row:hover a.job-results-window-link {
+  color: red;
 }
 
+/* Colors in ping column */
 .green {
   color: green;
 }
@@ -175,6 +204,32 @@ tr.client-table-details-row {
   color: red;
 }
 
+/* Client details row is hidden by default */
+tr.client-table-details-row {
+  display: none;
+}
+
+.client-table-pagination {
+  margin-top: 5px;
+  display: block;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.change-page {
+  color: #000100;
+  text-decoration: underline;
+}
+
+.change-page-inactive {
+  color: #B9BAA3;
+  text-decoration: underline;
+}
+
+/* END OF CLIENT LIST STYLING */
+
+/* FOOTER STYLING */
+
 .footer-area {
   border: 1px solid #CCC;
   margin-top: 10px;
@@ -185,3 +240,5 @@ tr.client-table-details-row {
   position: relative;
   overflow: auto;
 }
+
+/* END OF FOOTER STYLING */

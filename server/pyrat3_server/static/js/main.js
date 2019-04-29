@@ -186,8 +186,6 @@ function submitJob () {
 // AJAX request for a list of clients
 
 function loadClientTable () {
-  console.log('probuje');
-  console.log(refreshInterval);
   $.ajax({
     url: clientTableCurrUrl,
   })
@@ -210,7 +208,7 @@ function refreshClientTable () {
   setInterval(function () {
       tempRefreshInterval--;
       $('#refresh_counter').text(
-      `Remaning time to refresh: ${tempRefreshInterval} seconds.`);
+      `Remaining time to refresh: ${tempRefreshInterval} seconds.`);
       if (tempRefreshInterval == 0) {
           tempRefreshInterval = refreshInterval;
       }
