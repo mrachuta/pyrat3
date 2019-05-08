@@ -27,3 +27,4 @@ def pretty_args(value):
 @register.filter
 def cut_result(value):
     return value[0:value.find(')')+1]
+

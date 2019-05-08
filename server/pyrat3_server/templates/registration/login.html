@@ -1,0 +1,28 @@
+{% extends 'pyrat3_server/base.html' %}
+
+{% block main_content %}
+<div class="login-area">
+  {% if form.errors %}
+  <p class="red">Invalid username or password.</p>
+  {% endif %}
+  {% if next %}
+  {% if user.is_authenticated %}
+    <p class="red">
+      You are not able to view this page, use account with permissions to access this page.
+    </p>
+  {% else %}
+    <p>Login, to view requested page.</p>
+  {% endif %}
+  {% endif %}
+  <form method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+    <p>
+      <span class="login-area-login-field">Username: </span>{{ form.username }}
+    </p>
+    <p>
+      <span class="login-area-password-field">Password: </span>{{ form.password }}
+    </p>
+    <button type="submit" value="login">Login</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from .models import Client
+from rest_framework import serializers
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -33,3 +33,18 @@ class ClientSerializer(serializers.ModelSerializer):
             'last_activity_datetime': {'required': False},
         }
 
+
+class ClientSerializerRead(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = Client
+        fields = (
+            'client_id',
+            'pc_uuid',
+            'join_datetime',
+            'job_id',
+            'job_datetime',
+            'job',
+            'job_args',
+        )
