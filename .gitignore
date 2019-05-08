@@ -7,3 +7,5 @@ server/media/
 server/pyrat3/secrets
 server/pyrat3_server/migrations
 client/test.py
+client/test_cli.py
+client/client_generator.py

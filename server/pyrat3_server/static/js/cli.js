@@ -29,6 +29,7 @@ function setClientTableCurrUrl () {
   })
 }
 
+
 // Run functions when page is loaded
 
 $(document).ready(function () {

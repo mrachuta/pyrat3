@@ -1,128 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    {% load user_tags %}
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title>pyrat3 :: home</title>
-    <script src="https://code.jquery.com/jquery-3.4.0.min.js"
-            integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
-            crossorigin="anonymous">
-    </script>
-</head>
-<body>
-    <div id="sticky_top" class="sticky-top">
-        <div id="header_area" class="header-area">
-            <pre>
- ______   __  __     ______     ______     ______
-/\  == \ /\ \_\ \   /\  == \   /\  __ \   /\__  _\
-\ \  _-/ \ \____ \  \ \  __<   \ \  __ \  \/_/\ \/
- \ \_\    \/\_____\  \ \_\ \_\  \ \_\ \_\    \ \_\
-  \/_/     \/_____/   \/_/ /_/   \/_/\/_/     \/_/
-            </pre>
+{% extends 'pyrat3_server/base.html' %}
+
+{% load static %}
+{% load user_tags %}
+
+{% block title %}pyrat3 :: home{% endblock %}
+
+{% block under_header %}
+<div id="form_area" class="form-area">
+    <form id="job_form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {{ form.source.errors }}
+        {{ form.source }}
+        <div id="form_area_job_id_box" class="form-area-job-id-box">
+            {{ form.job_id.label_tag }}
+            {{ form.job_id.errors }}
+            {{ form.job_id }}
         </div>
-        <div id="form_area" class="form-area">
-            <form id="job_form">
-                {% csrf_token %}
-                {{ form.non_field_errors }}
-                {{ form.source.errors }}
-                {{ form.source }}
-                <div id="form_area_job_id_box" class="form-area-job-id-box">
-                    {{ form.job_id.label_tag }}
-                    {{ form.job_id.errors }}
-                    {{ form.job_id }}
-                </div>
-                <div id="form_area_client_id_box" class="form-area-client-id-box">
-                    {{ form.client_id.label_tag }}
-                    {{ form.client_id.errors }}
-                    {{ form.client_id }}
-                </div>
-                <div id="form_area_job_box" class="form-area-job-box">
-                    {{ form.job.label_tag }}
-                    {{ form.job.errors }}
-                    {{ form.job }}
-                </div>
-                <div id="form_area_initial_args_box" class="form-area-initial-args-box">
-                    <label>Command args:</label>
-                    <p>Please select radio button with type of command to see required arguments</p>
-                </div>
-                <div id="form_area_popup_args_box" class="form-area-job-args-box">
-                    <label>Popup args:</label>
-                    <div class="form-area-arg-field">
-                        <label for="title">Title: </label>
-                        <textarea name="title" id="title"></textarea>
-                    </div>
-                    <div class="form-area-arg-field">
-                        <label for="text">Text: </label>
-                        <textarea name="text" id="text"></textarea>
-                    </div>
-                </div>
-                <div id="form_area_run_command_args_box" class="form-area-job-args-box">
-                    <label>
-                        Run command args:
-                        <a href="#" id="add_input">+</a>
-                        <a href="#" id="remove_input">-</a>
-                    </label>
-                    <div class="form-area-arg-field">
-                        <label for="terminal">Terminal:</label>
-                         <select name = "terminal" id="terminal">
-                            <option value = "True" selected>True</option>
-                            <option value = "False">False</option>
-                         </select>
-                    </div>
-                    <div class="form-area-arg-field">
-                        <label for="arg0">Arg0:</label>
-                        <textarea name="arg0" id="arg0"></textarea>
-                    </div>
-                </div>
-                <div id="form_area_file_download_args_box" class="form-area-job-args-box">
-                    <label>Download file args</label>
-                    <div class="form-area-arg-field">
-                        <label for="url">URL:</label>
-                        <textarea name="url"  id="url"></textarea>
-                    </div>
-                    <div class="form-area-arg-field">
-                        <label for="d_path">Save path on remote PC:</label>
-                        <textarea name="d_path"  id="d_path"></textarea>
-                    </div>
-                    <div class="form-area-arg-field">
-                        <label for="arg0">Execute:</label>
-                         <select name = "execute"  id="execute">
-                            <option value = "True" selected>True</option>
-                            <option value = "False">False</option>
-                         </select>
-                    </div>
-                </div>
-                <div id="form_area_screenshot_args_box" class="form-area-job-args-box">
-                    <label>Screenshot args:</label>
-                    <p>Screenshot command has no args</p>
-                </div>
-                <div id="form_area_file_upload_args_box" class="form-area-job-args-box">
-                    <label>Upload file args</label>
-                    <div class="form-area-arg-field">
-                        <label for="file_path">File path:</label>
-                        <textarea name="file_path"  id="file_path"></textarea>
-                    </div>
-                </div>
-                <div id="form_area_job_args_box" class="form-area-job-args-box">
-                    {{ form.job_args.label_tag }}
-                    {{ form.job_args.errors }}
-                    {{ form.job_args }}
-                </div>
-                <button id="form_area_submit_job" class="form-area-submit-job" type="submit">GO!</button>
-            </form>
+        <div id="form_area_client_id_box" class="form-area-client-id-box">
+            {{ form.client_id.label_tag }}
+            {{ form.client_id.errors }}
+            {{ form.client_id }}
         </div>
-        <div id="ajax_status" class="ajax-status" >
-            No information about last AJAX request.
+        <div id="form_area_job_box" class="form-area-job-box">
+            {{ form.job.label_tag }}
+            {{ form.job.errors }}
+            {{ form.job }}
+        </div>
+        <div id="form_area_initial_args_box" class="form-area-initial-args-box">
+            <label>Command args:</label>
+            <p>Please select radio button with type of command to see required arguments</p>
+        </div>
+        <div id="form_area_popup_args_box" class="form-area-job-args-box">
+            <label>Popup args:</label>
+            <div class="form-area-arg-field">
+                <label for="title">Title: </label>
+                <textarea name="title" id="title"></textarea>
+            </div>
+            <div class="form-area-arg-field">
+                <label for="text">Text: </label>
+                <textarea name="text" id="text"></textarea>
+            </div>
+        </div>
+        <div id="form_area_run_command_args_box" class="form-area-job-args-box">
+            <label>
+                Run command args:
+                <a href="#" id="add_input">+</a>
+                <a href="#" id="remove_input">-</a>
+            </label>
+            <div class="form-area-arg-field">
+                <label for="terminal">Terminal:</label>
+                 <select name = "terminal" id="terminal">
+                    <option value = "True" selected>True</option>
+                    <option value = "False">False</option>
+                 </select>
+            </div>
+            <div class="form-area-arg-field">
+                <label for="arg0">Arg0:</label>
+                <textarea name="arg0" id="arg0"></textarea>
+            </div>
+        </div>
+        <div id="form_area_file_download_args_box" class="form-area-job-args-box">
+            <label>Download file args</label>
+            <div class="form-area-arg-field">
+                <label for="url">URL:</label>
+                <textarea name="url"  id="url"></textarea>
+            </div>
+            <div class="form-area-arg-field">
+                <label for="save_path">Save path on remote PC:</label>
+                <textarea name="save_path"  id="save_path"></textarea>
+            </div>
+            <div class="form-area-arg-field">
+                <label for="arg0">Execute:</label>
+                 <select name = "execute"  id="execute">
+                    <option value = "True" selected>True</option>
+                    <option value = "False">False</option>
+                 </select>
+            </div>
+        </div>
+        <div id="form_area_screenshot_args_box" class="form-area-job-args-box">
+            <label>Screenshot args:</label>
+            <p>Screenshot command has no args</p>
+        </div>
+        <div id="form_area_file_upload_args_box" class="form-area-job-args-box">
+            <label>Upload file args</label>
+            <div class="form-area-arg-field">
+                <label for="file_path">File path:</label>
+                <textarea name="file_path"  id="file_path"></textarea>
+            </div>
+        </div>
+        <div id="form_area_job_args_box" class="form-area-job-args-box">
+            {{ form.job_args.label_tag }}
+            {{ form.job_args.errors }}
+            {{ form.job_args }}
+        </div>
+        <button id="form_area_submit_job" class="form-area-submit-job" type="submit">GO!</button>
+    </form>
+</div>
+<div id="ajax_status" class="ajax-status" >
+    No information about last AJAX request.
+</div>
+{% endblock %}
+
+{% block main_content %}
+<div id="fresh_client_table" class="fresh-client-table">
+    Waiting for data...
+</div>
+<div id="job_result_popup" class="job-result-popup-overlay">
+    <div class="job-result-popup-main">
+        <h2>Job results</h2>
+        <a class="job-result-popup-close" href="#">&times;</a>
+        <div class="job-result-popup-content">
         </div>
     </div>
-    <div id="fresh_client_table" class="fresh-client-table">
-        Waiting for data...
-    </div>
-    <script src="{% static 'js/main.js' %}"></script>
-    <div id="footer_area" class="footer-area">
-        Pyrat (c) 2019 by me
-    </div>
-</body>
-</html>
+</div>
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

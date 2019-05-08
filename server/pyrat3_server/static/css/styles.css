@@ -6,11 +6,17 @@
 /* HEADER STYLING */
 
 .header-area {
-  height: 100px;
+  height: 110px;
   width: 100%;
   text-align: center;
   vertical-align: middle;
   display: block;
+}
+
+.header-area-user-panel {
+  height: 10px;
+  width: 100%;
+  text-align: right;
 }
 
 /* END OF HEADER STYLING */
@@ -22,8 +28,12 @@ label {
 }
 
 .form-area {
+  margin-top: 10px;
   height: 200px;
   width: 100%;
+  border: 1px solid #CCC;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 /* Hide input with job_id.
@@ -95,11 +105,14 @@ Cannot be changed on client side */
 /* END OF FORM-AREA STYLING */
 
 .ajax-status {
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   display: block;
   height: 20px;
   width: 100%;
+  border: 1px solid #CCC;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .refresh-counter {
@@ -164,20 +177,18 @@ th.client-table-xxl {
 }
 
 /* Rows styling - for selected and unselected row */
-tr.client-table-main-row {
+tr.client-table-main-row,
+tr.uploaded-files-client-details-table-main-row {
   color: #000100;
   background-color: #F8F8F8;
 }
 
 tr.client-table-main-row a {
+  padding: 0px;
   display: block;
   color: #000100;
   background-color: #F8F8F8;
   text-decoration: none;
-}
-
-tr.client-table-main-row a.job-results-window-link {
-  color: red;
 }
 
 tr.client-table-main-row:hover,
@@ -186,9 +197,6 @@ tr.client-table-main-row:hover a {
   color: #F8F8F8;
   text-decoration: none;
   cursor: pointer;
-}
-tr.client-table-main-row:hover a.job-results-window-link {
-  color: red;
 }
 
 /* Colors in ping column */
@@ -228,6 +236,117 @@ tr.client-table-details-row {
 
 /* END OF CLIENT LIST STYLING */
 
+/* JOB RESULT POPUP STYLING */
+
+.job-result-popup-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.job-result-popup-overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.job-result-popup-main {
+  margin: 30px auto 30px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  height: 70%;
+  position: sticky;
+  transition: all 0.5s ease-in-out;
+}
+
+.job-result-popup-main h2 {
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.job-result-popup-main .job-result-popup-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+.job-result-popup-main .job-result-popup-close:hover {
+  color: #06D85F;
+}
+
+.job-result-popup-content {
+  max-height: 90%;
+  overflow: auto;
+}
+
+/* END OF JOB RESULT POPUP STYLING */
+
+/* UPLOADED FILES LIST STYLING */
+
+.uploaded-files-list {
+  margin-top: 30px;
+  width: 100%;
+  min-height: 480px;
+  height: 140%;
+  display: block;
+}
+
+.uploaded-files-list li {
+  background: url('../img/file_ico.png') no-repeat left top;
+  padding: 10px 20px 20px 40px;
+  /* reset styles (optional): */
+  margin: 0;
+  list-style: none;
+}
+
+.uploaded-files-list .uploaded-file-name {
+  display: inline-block;
+  width: 600px;
+}
+
+.uploaded-files-list .uploaded-file-property {
+  display: inline-block;
+  width: 300px;
+}
+
+.uploaded-files-list .uploaded-files-none {
+  text-align: center;
+  display: block;
+}
+
+/* END OF UPLOADED FILES LIST STYLING */
+
+/* LOGIN AREA STYLING */
+
+.login-area {
+  display: block;
+  height: 20%;
+  min-height: 70px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.login-area-login-field,
+.login-area-password-field {
+  width: 100px;
+  display: inline-block;
+}
+
+/* END OF LOGIN AREA STYLING */
+
 /* FOOTER STYLING */
 
 .footer-area {
@@ -235,10 +354,14 @@ tr.client-table-details-row {
   margin-top: 10px;
   height: 70px;
   width: 100%;
-  text-align: center;
-  vertical-align: middle;
   position: relative;
   overflow: auto;
+}
+
+.footer-area-footer-text {
+  text-align: center;
+  vertical-align: middle;
+  margin-top: 25px;
 }
 
 /* END OF FOOTER STYLING */

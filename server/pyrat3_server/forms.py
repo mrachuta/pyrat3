@@ -6,11 +6,18 @@ class ClientSendCommandForm(forms.ModelForm):
 
     class CustomModelMultipleChoiceField(forms.ModelMultipleChoiceField):
 
+        """
+        Custom field, for control of label of each client in field.
+        Otherwise, model display method had to be changed,
+        and change would be available for all model-related views.
+        """
+
         def label_from_instance(self, obj):
             return '{} ({}/{})'.format(obj.pc_uuid, obj.ext_ip, obj.int_ip)
 
     client_id = CustomModelMultipleChoiceField(
-        queryset=Client.objects.all(),
+        queryset=Client.objects.all().order_by('-join_datetime'),
+        # Set value for each client in field as client_id
         to_field_name='client_id',
         label='Select client(s):',
     )
@@ -50,17 +57,6 @@ class ClientSendCommandForm(forms.ModelForm):
         'job',
         'job_args',
     ]
-    '''
-    def __init__(self, *args, **kwargs):
-        super(ClientSendCommandForm, self).__init__(*args, **kwargs)
-        self.fields['ext_ip'].required = False
-        self.fields['int_ip'].required = False
-        self.fields['bogie'].required = False
-        #self.fields['operation_no'].max_length = 6
-        #self.fields['operation_no'].min_length = 6
-        #self.fields['operation_no'].label = u'Numer operacji'
-        #self.fields['operation_no'].widget = forms.TextInput(attrs={'size': '5px', 'maxlength': '6'})
-    '''
 
 
 class ClientSendFileForm(forms.Form):

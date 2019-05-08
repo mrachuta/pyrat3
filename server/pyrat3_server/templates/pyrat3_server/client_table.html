@@ -4,12 +4,12 @@
     {% load static %}
     {% load user_tags %}
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title>pyrat :: client list</title>
+    <!-- <link rel="stylesheet" href="{% static 'css/styles.css' %}"> -->
+    <title>pyrat3 :: client list</title>
 </head>
 <body>
     <div id="client_table">
-        <div id="refresh_counter" class="refresh_counter">Table refreshed.</div>
+        <div id="refresh_counter" class="refresh_counter">Table refreshed!</div>
         <table class="client-table">
             <tr>
                 <th id="client_table_pos" class="client-table-s">Pos</th>
@@ -40,10 +40,17 @@
                 <td><a onclick="showOrHideClientDetails(this);">{{ client.job }}</a></td>
                 <td><a onclick="showOrHideClientDetails(this);">{{ client.job_args|pretty_args|safe }}</a></td>
                 <td>
-                    <a onclick="showOrHideClientDetails(this);">
-                        {{ client.job_result|linebreaks|truncatechars:"300" }}
-                        <a class="job-results-window-link" href="#">Click for more</a>
+                    {% if client.job_result|length > 110 %}
+                    <a class="job-result-popup-link" href="#job_result_popup"
+                       onclick="showJobResultPopup('{% spaceless %} {{ client.job_result|linebreaksbr|force_escape }} {% endspaceless %}');">
+                        {{ client.job_result|linebreaks|truncatechars:"110" }}
+                        <b>Click for more</b>
                     </a>
+                    {% else %}
+                    <a onclick="showOrHideClientDetails(this);">
+                    {{ client.job_result|linebreaks }}
+                    </a>
+                    {% endif %}
                 </td>
                 {% with client.last_activity_datetime|timediff as ping %}
                 <td>

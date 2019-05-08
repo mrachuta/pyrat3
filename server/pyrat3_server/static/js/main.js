@@ -253,6 +253,12 @@ function showOrHideClientDetails (element) {
   localStorage.setItem('visible_divs', JSON.stringify(visibleDivs));
 }
 
+function showJobResultPopup (message) {
+  this.preventDefault;
+  $('.job-result-popup-content').html(message);
+  $(this).trigger('click');
+}
+
 // Run functions when page is loaded
 
 $(document).ready(function () {
