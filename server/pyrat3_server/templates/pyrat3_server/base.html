@@ -14,7 +14,6 @@
 <body>
     <div id="sticky_top" class="sticky-top">
         <div id="header_area" class="header-area">
-
             <div id="header_area_user_panel" class="header-area-user-panel">
                 {% if user.is_authenticated %}
                 <a href="{% url 'logout' %}">Logged as <b>{{ user.username }}</b> // click to logout</a>

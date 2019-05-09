@@ -24,7 +24,7 @@ class ClientSendCommandForm(forms.ModelForm):
 
     class Meta:
 
-        commands = (
+        available_jobs = (
             ('popup', 'Show popup'),
             ('run_command', 'Run command'),
             ('file_download', 'Download file on remote host'),
@@ -48,7 +48,7 @@ class ClientSendCommandForm(forms.ModelForm):
 
         widgets = {
             'job_id': forms.TextInput(attrs={'readonly': 'readonly'}),
-            'job': forms.RadioSelect(choices=commands),
+            'job': forms.RadioSelect(choices=available_jobs),
         }
 
     field_order = [

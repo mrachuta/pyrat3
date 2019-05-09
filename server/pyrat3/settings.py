@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
+# Your app should be first, to prevent problems with in DRF
 
 INSTALLED_APPS = [
     'pyrat3_server',
@@ -125,3 +126,12 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'collectedstatic')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = '/pyrat3_server/index/'
+
+# Prevent from access to web-api for REST queries
+"""
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer'
+    )
+}
+"""
