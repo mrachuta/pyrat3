@@ -14,12 +14,15 @@
 <body>
     <div id="sticky_top" class="sticky-top">
         <div id="header_area" class="header-area">
-
             <div id="header_area_user_panel" class="header-area-user-panel">
                 {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}">Logged as <b>{{ user.username }}</b> // click to logout</a>
+                <a class="link-highlighted" href="{% url 'logout' %}">
+                    Logged as <b>{{ user.username }}</b> // click to logout
+                </a>
                 {% else %}
-                <a href="{% url 'login' %}">You are not logged in, click to login</a>
+                <a class="link-highlighted" href="{% url 'login' %}">
+                    You are not logged in, click to login
+                </a>
                 {% endif %}
             </div>
             <pre>
@@ -36,7 +39,16 @@
     {% block main_content %}
     {% endblock %}
     <div id="footer_area" class="footer-area">
-        <p class="footer-area-footer-text">Pyrat (c) 2019 by me</p>
+        <div class="footer-area-footer-info">
+            <a class="link-highlighted" href="{% url 'index' %}">Homepage </a>|
+            <a class="link-highlighted" href="{% url 'logout' %}">Logout </a> |
+            Associated clients: {{ associated_clients_count }}
+        </div>
+        <div class="footer-area-footer-text">Pyrat 3.0 (c) 2019, powered by:</div>
+        <div class="footer-area-footer-img">
+            <img src="{% static 'img/python_logo.jpg' %}" height="60px">
+            <img src="{% static 'img/footer_logo.jpg' %}" height="60px">
+        </div>
     </div>
 </body>
 </html>
