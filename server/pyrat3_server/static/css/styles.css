@@ -1,7 +1,26 @@
+/* STICKY HEADER */
+
+/* This code below reduce gap between top of
+page and next div */
+
+html{
+    margin-top:0;
+    padding-top:0;
+}
+
+body{
+    margin-top:0;
+    padding-top:0;
+}
+
 .sticky-top {
   position: -webkit-sticky;
   position: sticky;
+  top: 0;
+  background: #FFFFFF;
 }
+
+/* END OF STICKY HEADER STYLING */
 
 /* HEADER STYLING */
 
@@ -19,6 +38,17 @@
   text-align: right;
 }
 
+.link-highlighted {
+  color: #000000;
+  text-decoration: underline;
+}
+
+.link-highlighted:hover {
+  color: #FFFFFF;
+  text-decoration: underline;
+  background-color: #000000;
+}
+
 /* END OF HEADER STYLING */
 
 /* FORM AREA STYLING */
@@ -34,6 +64,7 @@ label {
   border: 1px solid #CCC;
   padding-top: 10px;
   padding-bottom: 10px;
+  background-color: #FFFBF4;
 }
 
 /* Hide input with job_id.
@@ -46,6 +77,8 @@ Cannot be changed on client side */
 .form-area-client-id-box {
   height: 180px;
   width: 520px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 /* Adjust size of client-selection box */
@@ -54,10 +87,26 @@ Cannot be changed on client side */
   width: 500px;
 }
 
+#id_client_id option:hover,
+#id_client_id option:active,
+#id_client_id option:focus,
+#id_client_id option:checked {
+  background: linear-gradient(#000000, #000000);
+  color: white;
+}
+
+
 /* Adjust size of job-selection box */
 .form-area-job-box {
   height: 180px;
   width: 300px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.form-area-job-box li {
+  list-style: none;
+  margin-left: -40px;
 }
 
 /* Draw all boxes from left to right */
@@ -65,6 +114,7 @@ Cannot be changed on client side */
 .form-area-job-box,
 .form-area-job-args-box {
   float: left;
+
 }
 
 .form-area-arg-field {
@@ -88,6 +138,8 @@ Cannot be changed on client side */
   display: block;
   height: 180px;
   width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 /* Real arg-boxes - not displayed initially */
@@ -95,11 +147,15 @@ Cannot be changed on client side */
   display: none;
   height: 180px;
   /* calculation of width */
-  width: calc(100% - 520px - 300px);
+  width: calc(100% - 520px - 300px - 60px);
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .form-area-submit-job {
   display: block;
+  margin-left: 10px;
+  width: 100px;
 }
 
 /* END OF FORM-AREA STYLING */
@@ -113,6 +169,7 @@ Cannot be changed on client side */
   border: 1px solid #CCC;
   padding-top: 10px;
   padding-bottom: 10px;
+  background: #E5B25D;
 }
 
 .refresh-counter {
@@ -142,6 +199,10 @@ Cannot be changed on client side */
 
 .client-table th, td {
   border: 1px solid #CCC;
+}
+
+tr.client-table-header {
+  background-color: #857C8D;
 }
 
 tr.client-table-main-row {
@@ -215,6 +276,7 @@ tr.client-table-main-row:hover a {
 /* Client details row is hidden by default */
 tr.client-table-details-row {
   display: none;
+  background-color: #EFFFFE;
 }
 
 .client-table-pagination {
@@ -225,8 +287,14 @@ tr.client-table-details-row {
 }
 
 .change-page {
-  color: #000100;
+  color: #000000;
   text-decoration: underline;
+}
+
+.change-page:hover {
+  color: #FFFFFF;
+  text-decoration: underline;
+  background: #000000;
 }
 
 .change-page-inactive {
@@ -260,7 +328,7 @@ tr.client-table-details-row {
   padding: 20px;
   background: #fff;
   border-radius: 5px;
-  width: 30%;
+  width: 40%;
   height: 70%;
   position: sticky;
   transition: all 0.5s ease-in-out;
@@ -272,7 +340,7 @@ tr.client-table-details-row {
   font-family: Tahoma, Arial, sans-serif;
 }
 
-.job-result-popup-main .job-result-popup-close {
+.job-result-popup-close {
   position: absolute;
   top: 20px;
   right: 30px;
@@ -283,7 +351,7 @@ tr.client-table-details-row {
   color: #333;
 }
 
-.job-result-popup-main .job-result-popup-close:hover {
+.job-result-popup-close:hover {
   color: #06D85F;
 }
 
@@ -312,17 +380,27 @@ tr.client-table-details-row {
   list-style: none;
 }
 
-.uploaded-files-list .uploaded-file-name {
+.uploaded-file-name {
   display: inline-block;
   width: 600px;
+  color: #000000;
+  text-decoration: underline;
 }
 
-.uploaded-files-list .uploaded-file-property {
+.uploaded-file-name:hover {
+  display: inline-block;
+  width: 600px;
+  color: #FFFFFF;
+  text-decoration: underline;
+  background: #000000;
+}
+
+.uploaded-file-property {
   display: inline-block;
   width: 300px;
 }
 
-.uploaded-files-list .uploaded-files-none {
+.uploaded-files-none {
   text-align: center;
   display: block;
 }
@@ -358,10 +436,34 @@ tr.client-table-details-row {
   overflow: auto;
 }
 
+.footer-area-footer-info {
+  padding-top: 25px;
+  padding-left: 10px;
+  padding-right: 2px;
+  padding-bottom: 2px;
+  text-align: left;
+  width: 40%;
+  float: left;
+  display: inline-block;
+}
+
 .footer-area-footer-text {
   text-align: center;
-  vertical-align: middle;
-  margin-top: 25px;
+  padding-top: 25px;
+  display: inline-block;
 }
+
+.footer-area-footer-img {
+  text-align: right;
+  width: 40%;
+  float: right;
+  display: inline-block;
+  padding-top: 2px;
+  padding-left: 2px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+}
+
+
 
 /* END OF FOOTER STYLING */
