@@ -50,9 +50,9 @@
             </label>
             <div class="form-area-arg-field">
                 <label for="terminal">Terminal:</label>
-                 <select name = "terminal" id="terminal">
-                    <option value = "True" selected>True</option>
-                    <option value = "False">False</option>
+                 <select name="terminal" id="terminal">
+                    <option value="True" selected>True</option>
+                    <option value="False">False</option>
                  </select>
             </div>
             <div class="form-area-arg-field">
@@ -64,17 +64,17 @@
             <label>Download file args</label>
             <div class="form-area-arg-field">
                 <label for="url">URL:</label>
-                <textarea name="url"  id="url"></textarea>
+                <textarea name="url" id="url"></textarea>
             </div>
             <div class="form-area-arg-field">
                 <label for="save_path">Save path on remote PC:</label>
-                <textarea name="save_path"  id="save_path"></textarea>
+                <textarea name="save_path" id="save_path"></textarea>
             </div>
             <div class="form-area-arg-field">
                 <label for="arg0">Execute:</label>
-                 <select name = "execute"  id="execute">
-                    <option value = "True" selected>True</option>
-                    <option value = "False">False</option>
+                 <select name="execute" id="execute">
+                    <option value="True" selected>True</option>
+                    <option value="False">False</option>
                  </select>
             </div>
         </div>
@@ -103,15 +103,12 @@
 {% endblock %}
 
 {% block main_content %}
-<div id="fresh_client_table" class="fresh-client-table">
-    Waiting for data...
-</div>
+<div id="fresh_client_table" class="fresh-client-table">Waiting for data...</div>
 <div id="job_result_popup" class="job-result-popup-overlay">
     <div class="job-result-popup-main">
         <h2>Job results</h2>
         <a class="job-result-popup-close" href="#">&times;</a>
-        <div class="job-result-popup-content">
-        </div>
+        <div class="job-result-popup-content"></div>
     </div>
 </div>
 <script src="{% static 'js/main.js' %}"></script>
