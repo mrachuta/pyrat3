@@ -1,7 +1,11 @@
 import uuid
+import pytz
 from django.db import models
+from datetime import datetime
 from django.utils import timezone
 from time import gmtime, strftime
+
+
 
 
 def short_uuid():
@@ -40,7 +44,9 @@ class Client(models.Model):
     def __str__(self):
         return self.client_id
 
-
-
-
+    @property
+    def ping(self):
+        curr_time = datetime.now(tz=pytz.utc)
+        delta = curr_time - self.last_activity_datetime
+        return delta.seconds
 

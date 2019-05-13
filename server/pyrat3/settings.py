@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-with open(os.path.join(os.getcwd(), 'pyrat3/secrets'), 'r') as s:
+with open(os.path.join(BASE_DIR, 'pyrat3/secrets'), 'r') as s:
     SECRET_KEY = s.readline()
 
 # SECURITY WARNING: don't run with debug turned on in production!

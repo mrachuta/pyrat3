@@ -42,7 +42,12 @@
         <div class="footer-area-footer-info">
             <a class="link-highlighted" href="{% url 'index' %}">Homepage </a>|
             <a class="link-highlighted" href="{% url 'logout' %}">Logout </a> |
-            Associated clients: {{ associated_clients_count }}
+            Associated clients:
+            {% if user.is_authenticated %}
+            {{ associated_clients_count }}
+            {% else %}
+            <i>please login first</i>
+            {% endif %}
         </div>
         <div class="footer-area-footer-text">Pyrat 3.0 (c) 2019, powered by:</div>
         <div class="footer-area-footer-img">
