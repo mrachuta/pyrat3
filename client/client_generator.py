@@ -4,20 +4,25 @@ import random
 import uuid
 import requests
 import string
-import socket
-import struct
+
+"""
+Script to add new fake clients to database.
+Only for testing-purposes.
+"""
 
 HOME_HOST = "http://127.0.0.1:8000/pyrat3_server/api/"
 
+
 def random_string(str_length):
-    """Generate a random string of fixed length """
-    listtt = ''.join([i for i in string.ascii_uppercase if 'O' not in i])
-    chars = listtt + string.digits
-    return ''.join(random.choice(chars) for i in range(str_length))
+    chars_list = ''.join([i for i in string.ascii_uppercase if 'O' not in i])
+    chars_list = chars_list + string.digits
+    return ''.join(random.choice(chars_list) for _ in range(str_length))
+
 
 def random_ip():
     ip = ".".join(map(str, (random.randint(0, 255) for _ in range(4))))
     return ip
+
 
 os_list = [
     'Windows XP',

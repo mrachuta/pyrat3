@@ -52,13 +52,12 @@
                     </a>
                     {% endif %}
                 </td>
-                {% with client.last_activity_datetime|timediff as ping %}
                 <td>
                     <a onclick="showOrHideClientDetails(this);">
-                    {% if ping < 16 %}
-                    <span class="green">{{ ping }}</span>
-                    {% elif ping < 100 %}
-                    <span class="orange">{{ ping }}</span>
+                    {% if client.ping <= 15 %}
+                    <span class="green">{{ client.ping }}</span>
+                    {% elif client.ping <= 100 %}
+                    <span class="orange">{{ client.ping }}</span>
                     {% else %}
                     <span class="red">Offline</span>
                     {% endif %}
@@ -66,16 +65,15 @@
                 </td>
                 <td>
                     <a onclick="showOrHideClientDetails(this);">
-                    {% if client.job_id in client.job_result and ping < 16 %}
+                    {% if client.job_id in client.job_result and client.ping <= 15 %}
                     IDDLE
-                    {% elif ping > 100 %}
-                    ------
-                    {% else %}
+                    {% elif client.ping <= 100 %}
                     WORKING
+                    {% else %}
+                    ------
                     {% endif %}
                     </a>
                 </td>
-                {% endwith %}
                 <td><a href="{% url 'client_files' client.client_id %}" target="_blank">FILES</a></td>
             </tr>
             <tr id="client_table_{{ client.client_id }}_details_row" class="client-table-details-row">

@@ -8,4 +8,8 @@ server/pyrat3/secrets
 server/pyrat3_server/migrations
 client/test.py
 client/test_cli.py
-client/client_generator.py
+#client/client_generator.py
+# For Heroku deployment
+server/Procfile
+server/requirements.txt
+server/runtime.txt

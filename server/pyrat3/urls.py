@@ -32,7 +32,7 @@ urlpatterns += [
             template_name="registration/login.html"), name="login"
         ),
     url(r'^accounts/logout/$',
-        auth_views.LoginView.as_view(
+        auth_views.LogoutView.as_view(
             template_name="registration/logged_out.html"), name="logout"
         ),
 ]
