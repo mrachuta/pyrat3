@@ -246,17 +246,25 @@ function showOrHideClientDetails (element) {
     var rowId = `#${$(this).attr('id')}`;
     if ($(rowId).is(':visible')) {
       client = {id: rowId, visibility: true};
-      console.log(client);
       visibleDivs.push(client);
     }
   });
-  localStorage.setItem('visible_divs', JSON.stringify(visibleDivs));
+  if (visibleDivs) {
+    localStorage.setItem('visible_divs', JSON.stringify(visibleDivs));
+  }
 }
 
 function showJobResultPopup (message) {
   this.preventDefault;
   $('.job-result-popup-content').html(message);
   $(this).trigger('click');
+}
+
+/* Exchange standard select multiple by custom field */
+function applyMultiJs () {
+  /* Main script loaded on base.html. Here only function is
+  called */
+  $('#id_client_id').multi();
 }
 
 // Run functions when page is loaded
@@ -266,4 +274,5 @@ $(document).ready(function () {
   addOrRemoveArgField();
   submitJob();
   refreshClientTable();
+  applyMultiJs();
 });
