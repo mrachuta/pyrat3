@@ -6,7 +6,7 @@ localStorage.
 
 function loadClientDetailsState () {
   var visibleDivs = JSON.parse(localStorage.getItem('visible_divs'));
-    if (visibleDivs.length) {
+    if (visibleDivs !== null) {
       for (var i=0; i<visibleDivs.length; i++) {
         $(visibleDivs[i].id).show();
       }

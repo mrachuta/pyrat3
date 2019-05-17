@@ -76,12 +76,14 @@ Cannot be changed on client side */
 
 .form-area-client-id-box {
   height: 180px;
-  width: 520px;
+  width: 600px;
   padding-left: 10px;
   padding-right: 10px;
 }
 
 /* Adjust size of client-selection box */
+
+/*
 #id_client_id {
   height: 150px;
   width: 500px;
@@ -94,7 +96,7 @@ Cannot be changed on client side */
   background: linear-gradient(#000000, #000000);
   color: white;
 }
-
+*/
 
 /* Adjust size of job-selection box */
 .form-area-job-box {
@@ -130,6 +132,7 @@ Cannot be changed on client side */
   resize: horizontal;
   width: 180px;
   min-width: 200px;
+  max-width: 500px;
   height: 15px;
 }
 
@@ -147,7 +150,7 @@ Cannot be changed on client side */
   display: none;
   height: 180px;
   /* calculation of width */
-  width: calc(100% - 520px - 300px - 60px);
+  width: calc(100% - 600px - 300px - 60px);
   padding-left: 10px;
   padding-right: 10px;
 }

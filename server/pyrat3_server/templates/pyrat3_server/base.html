@@ -4,12 +4,14 @@
     {% load static %}
     {% load user_tags %}
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/multi.css' %}">
     <title>{% block title %}{% endblock %}</title>
     <script src="https://code.jquery.com/jquery-3.4.0.min.js"
             integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
             crossorigin="anonymous">
     </script>
+    <script src="{% static 'js/multi.js' %}"></script>
 </head>
 <body>
     <div id="sticky_top" class="sticky-top">
