@@ -136,7 +136,7 @@ Cannot be changed on client side */
   height: 15px;
 }
 
-/* Inital args box */
+/* Initial args box */
 .form-area-initial-args-box {
   display: block;
   height: 180px;
@@ -183,8 +183,8 @@ Cannot be changed on client side */
 /* CLIENT LIST STYLING */
 
 .fresh-client-table {
-  height: 650px;
-  max-height: 650px;
+  height: 850px;
+  max-height: 850px;
   width: 100%;
   display: block;
 }
@@ -218,8 +218,6 @@ Cannot be changed on client side */
    padding-top: 15px;
    padding-bottom: 15px;
 }
-
-
 
 .client-table th, td {
   border: 1px solid #CCC;
@@ -487,7 +485,5 @@ tr.client-table-details-row {
   padding-right: 10px;
   padding-bottom: 2px;
 }
-
-
 
 /* END OF FOOTER STYLING */

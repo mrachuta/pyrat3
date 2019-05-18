@@ -30,6 +30,7 @@ class ClientSendCommandForm(forms.ModelForm):
             ('file_download', 'Download file on remote host'),
             ('screenshot', 'Make screenshot'),
             ('file_upload', 'Upload file from remote host'),
+            ('delete', 'Delete client from database')
         )
 
         model = Client
