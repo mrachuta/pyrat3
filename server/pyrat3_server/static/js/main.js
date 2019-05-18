@@ -180,6 +180,11 @@ function submitJob () {
         );
       }
     });
+    if (selectedJob == 'delete') {
+      setTimeout(function () {
+      location.reload()
+      }, 3000);
+    };
   });
 }
 
@@ -264,7 +269,10 @@ function showJobResultPopup (message) {
 function applyMultiJs () {
   /* Main script loaded on base.html. Here only function is
   called */
-  $('#id_client_id').multi();
+  $('#id_client_id').multi({
+  "search_placeholder":
+  "Search... (if there are no clients, hit CTRL+R to manually refresh the page)",
+  });
 }
 
 // Run functions when page is loaded

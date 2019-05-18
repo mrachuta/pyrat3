@@ -89,6 +89,15 @@
                 <textarea name="file_path"  id="file_path"></textarea>
             </div>
         </div>
+        <div id="form_area_delete_args_box" class="form-area-job-args-box">
+            <label>Delete args:</label>
+            <p>
+                Delete command has no args, please use it with caution, because
+                there is no chance to undo this job. After 3 seconds from command
+                sent, site will refresh automatically to update available clients
+                in form.
+            </p>
+    </div>
         <div id="form_area_job_args_box" class="form-area-job-args-box">
             {{ form.job_args.label_tag }}
             {{ form.job_args.errors }}

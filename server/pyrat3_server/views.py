@@ -50,13 +50,21 @@ class Index(generic.edit.FormView):
             """
 
             for client_id in form.cleaned_data['client_id']:
-                client = Client.objects.get(client_id=client_id)
-                client.job_id = form.cleaned_data['job_id']
-                client.job = form.cleaned_data['job']
-                # Set tz (timezone) to UTC for unify time objects
-                client.job_datetime = datetime.now(tz=pytz.utc)
-                client.job_args = form.cleaned_data['job_args']
-                client.save()
+                if form.cleaned_data['job'] != 'delete':
+                    client = Client.objects.get(client_id=client_id)
+                    client.job_id = form.cleaned_data['job_id']
+                    client.job = form.cleaned_data['job']
+                    # Set tz (timezone) to UTC for unify time objects
+                    client.job_datetime = datetime.now(tz=pytz.utc)
+                    client.job_args = form.cleaned_data['job_args']
+                    client.save()
+                else:
+                    try:
+                        os.rmdir(os.path.join(settings.MEDIA_ROOT, str(client_id)))
+                    except FileNotFoundError:
+                        pass
+                    finally:
+                        Client.objects.get(client_id=client_id).delete()
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
