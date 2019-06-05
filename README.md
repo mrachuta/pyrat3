@@ -105,6 +105,20 @@ Used libraries:
   http://127.0.0.1:8000/pyrat3_server/index/
   ```
   To login, use previously created, super-user credentials.
+  
+- Online version of server is available via:
+  ```
+  http://pyrat.thinkbox.pl/
+  ```
+  Credentials:
+  ```
+  login: root / pass: toor12345
+  ```
+  Don't forget to change HOME value in *client.py* to:
+  ```
+  https://pyrat.pythonanywhere.com/pyrat3_server/api/
+  ```
+  After tests, be sure that your host is deleted from client list!
 
 ## Thanks
 
