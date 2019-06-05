@@ -14,7 +14,7 @@ from tkinter import messagebox
 from time import gmtime, strftime, sleep
 
 
-HOME = "https://pyrat.pythonanywhere.com/pyrat3_server/api/"
+HOME = "http://127.0.0.1:8000/pyrat3_server/api/"
 
 
 def curr_datetime():
