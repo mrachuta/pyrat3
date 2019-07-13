@@ -10,7 +10,7 @@ Script to add new fake clients to database.
 Only for testing-purposes.
 """
 
-HOME_HOST = "http://127.0.0.1:8000/pyrat3_server/api/"
+HOME_HOST = "http://127.0.0.1:8000/pyrserver/api/"
 
 
 def random_string(str_length):
