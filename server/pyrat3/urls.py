@@ -22,11 +22,9 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('pyrat3_server/', include('pyrat3_server.urls')),
+    path('pyrgui/', include('pyrgui.urls')),
+    path('pyrserver/', include('pyrserver.urls')),
     path('admin/', admin.site.urls),
-]
-
-urlpatterns += [
     url(r'^accounts/login/$',
         auth_views.LoginView.as_view(
             template_name="registration/login.html"), name="login"

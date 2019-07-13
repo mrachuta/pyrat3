@@ -32,7 +32,8 @@ ALLOWED_HOSTS = ['*']
 # Your app should be first, to prevent problems with in DRF
 
 INSTALLED_APPS = [
-    'pyrat3_server',
+    'pyrgui',
+    'pyrserver',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,7 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'pyrat3_server.context_processors.count_associated_clients'
+                'pyrgui.context_processors.count_associated_clients'
             ],
         },
     },
@@ -125,7 +126,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'collectedstatic')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-LOGIN_REDIRECT_URL = '/pyrat3_server/index/'
+LOGIN_REDIRECT_URL = '/pyrgui/index/'
 
 #  Render REST-views as 'raw' views (without GUI)
 REST_FRAMEWORK = {
