@@ -48,15 +48,7 @@ a) Windows 8.1 (PL-PL) (x64) with Python 3.7.1
 b) Windows 8.1 (EN-US) (x64) with Python 3.6.4  
 
 Used libraries:
-* certifi==2019.6.16
-* chardet==3.0.4
-* Django==2.2.3
-* djangorestframework==3.9.4
-* idna==2.8
-* pytz==2019.1
-* requests==2.22.0
-* sqlparse==0.3.0
-* urllib3==1.25.3
+* available in requirements.txt
 
 ## Setup
 
@@ -100,7 +92,7 @@ Used libraries:
   ```
   python manage.py runserver
   ```
-  next, open browser and enter following adress:
+  next, open browser and enter following address:
   ```
   http://127.0.0.1:8000/pyrgui/index/
   ```

@@ -18,10 +18,12 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
+from django.shortcuts import redirect
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    path('', lambda request: redirect('pyrgui/', permanent=False)),
     path('pyrgui/', include('pyrgui.urls')),
     path('pyrserver/', include('pyrserver.urls')),
     path('admin/', admin.site.urls),
