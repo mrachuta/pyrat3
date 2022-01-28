@@ -14,10 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.conf.urls import url
 from django.contrib import admin
 from django.conf import settings
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.shortcuts import redirect
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -27,11 +26,11 @@ urlpatterns = [
     path('pyrgui/', include('pyrgui.urls')),
     path('pyrserver/', include('pyrserver.urls')),
     path('admin/', admin.site.urls),
-    url(r'^accounts/login/$',
+    re_path(r'^accounts/login/$',
         auth_views.LoginView.as_view(
             template_name="registration/login.html"), name="login"
         ),
-    url(r'^accounts/logout/$',
+    re_path(r'^accounts/logout/$',
         auth_views.LogoutView.as_view(
             template_name="registration/logged_out.html"), name="logout"
         ),
